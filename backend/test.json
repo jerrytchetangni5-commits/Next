@@ -1,0 +1,52 @@
+{
+  "template_id": 1,
+  "name": "Mon CV Complet",
+  "data": {
+    "personal_info": {
+      "first_name": "Jean",
+      "last_name": "Dupont",
+      "photo": null,
+      "birth_date": "1995-05-15",
+      "gender": "Homme",
+      "email": "jean.dupont@mail.com",
+      "phone": "+221 77 123 45 67",
+      "address": "Dakar, Sénégal"
+    },
+    "summary": "Développeur web passionné par les technologies innovantes.",
+    "educations": [
+      {
+        "degree": "Licence Informatique",
+        "school": "UCAD",
+        "city": "Dakar",
+        "start_date": "2020-09",
+        "end_date": "2023-06",
+        "description": "Spécialisation en génie logiciel"
+      }
+    ],
+    "experiences": [
+      {
+        "position": "Développeur Laravel",
+        "company": "AfriTech",
+        "city": "Dakar",
+        "start_date": "2023-01",
+        "end_date": "2024-06",
+        "description": "Développement d'API REST et maintenance d'applications web."
+      }
+    ],
+    "skills": [
+      { "name": "Laravel" },
+      { "name": "PHP" },
+      { "name": "MySQL" },
+      { "name": "Git" }
+    ],
+    "languages": [
+      { "language_name": "Français", "language_level": "Natif" },
+      { "language_name": "Anglais", "language_level": "B2" }
+    ],
+    "interests": [
+      { "name": "Lecture" },
+      { "name": "Sport" },
+      { "name": "Musique" }
+    ]
+  }
+}

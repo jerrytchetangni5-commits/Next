@@ -1,0 +1,30 @@
+# Laravel
+backend/vendor/
+backend/node_modules/
+backend/.env
+backend/storage/logs/
+backend/storage/framework/
+backend/bootstrap/cache/
+
+# Frontend (ignoré totalement, y compris son sous-dépôt)
+frontend/
+frontend/*
+frontend/**
+!/frontend/**/
+
+# Scraper
+scraper/node_modules/
+scraper/storage/
+scraper/data/
+scraper/.crawlee/
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

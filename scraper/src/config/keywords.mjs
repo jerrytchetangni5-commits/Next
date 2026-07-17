@@ -1,0 +1,31 @@
+/** Mots-clés pour l'extraction du domaine */
+
+export const DOMAIN_KEYWORDS = [
+    "Engineering",
+    "Computer Science",
+    "Medicine",
+    "Economics",
+    "Business",
+    "Law",
+    "Mathematics",
+    "Physics",
+    "Chemistry",
+    "Biology",
+    "Data Science",
+    "Artificial Intelligence",
+    "Finance",
+    "Statistics",
+    "Architecture",
+    "Education",
+    "Psychology",
+    "Public Health",
+    "Marketing",
+    "Communication",
+    "Business Administration",
+    "MBA",
+    "Digital Marketing",
+    "Media",
+    "Journalism",
+    "Public Relations",
+    "Advertising"
+];
