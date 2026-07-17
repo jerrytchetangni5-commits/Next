@@ -28,7 +28,6 @@ class AdminScholarshipController extends Controller
             'deadline' => 'required|date',
             'description' => 'required|string',
             'funding_type' => 'required|in:full,partial,unfunded',
-            'amount' => 'nullable|string|max:20',
             'benefits' => 'nullable|string',
             'requirement' => 'nullable|string',
             'image' => 'nullable|url',
