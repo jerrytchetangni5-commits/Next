@@ -4,9 +4,7 @@ namespace App\Services;
 
 use App\Models\Scholarship;
 use Carbon\Carbon;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Log;
 
 class ScholarshipImporter
 {
@@ -21,14 +19,13 @@ class ScholarshipImporter
         ];
 
         if (!File::exists($path)) {
-            throw new \Exception("Fichier introuvable: $path"); // si le fichier n'existe pas on lance une exception
+            throw new \Exception("Fichier introuvable: $path");
         }
 
         $json = File::get($path);
         $data = json_decode($json,true);
 
-        //vérification de la validité du json
-        if (json_last_error() !== JSON_ERROR_NONE){
+        if (json_last_error()!== JSON_ERROR_NONE){
             throw new \Exception('JSON invalide: ' . json_last_error_msg());
         }
 
@@ -38,7 +35,6 @@ class ScholarshipImporter
 
         $stats['total'] = count($data);
 
-        //parcourt chaque bourse
         foreach ($data as $item){
             try{
                 if (empty($item['link'])){
@@ -53,11 +49,6 @@ class ScholarshipImporter
 
                 $prepared = $this->prepareData($item);
 
-                if(empty($prepared['title'])){
-                    $stats['errors']++;
-                    continue;
-                }
-
                 $model = Scholarship::updateOrCreate(
                     ['link' => $prepared['link']],
                     $prepared
@@ -68,11 +59,6 @@ class ScholarshipImporter
                 } else {
                     $stats['updated']++;
                 }
-
-                if (config('locales.translate_enabled', false)){
-                    \App\Jobs\TranslateScholarshipJob::dispatch($model);
-                }
-
             } catch(\Exception $e) {
                 $stats['errors']++;
                 \Log::error('Erreur import bourse', [
@@ -84,7 +70,6 @@ class ScholarshipImporter
             }
         }
 
-        Log::channel('import')->info('Import terminé', $stats);
         return $stats;
     }
 
@@ -118,17 +103,14 @@ class ScholarshipImporter
 
         $date = trim($date);
 
-        //December 1, 2026
         if (preg_match('/^([A-Za-z]+)\s+(\d{1,2}),?\s+(\d{4})$/', $date, $m)){
             return Carbon::parse($m[3] . '-' . $m[1] . '-' . str_pad($m[2], 2, '0', STR_PAD_LEFT));
         }
 
-        //1 December 2026
         if (preg_match('/^(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})$/', $date, $m)) {
             return Carbon::parse($m[3] . '-' . $m[2] . '-' . str_pad($m[1], 2, '0', STR_PAD_LEFT));
         }
 
-        // December 2026
         if (preg_match('/^([A-Za-z]+)\s+(\d{4})$/', $date, $m)) {
             return Carbon::parse($m[2] . '-' . $m[1] . '-01')->endOfMonth();
         }
@@ -142,142 +124,47 @@ class ScholarshipImporter
 
     private function prepareData(array $data): array
     {
-        //nettoie le texte
-        $normalized = $this->normalizeFields($data);
-
-        //normalisations des champs
-        $normalized['country'] = $this->normalizeCountry($normalized['country'] ?? null);
-
-        $normalized['funding_type'] = $this->normalizeFundingType($normalized['funding_type'] ?? null);
-
-        $normalized['image'] = $this->validateImage($normalized['image'] ?? null);
-
-        $normalized['deadline'] = $this->parseDate($normalized['deadline'] ?? '')?->toDateString();
-
-        $normalized['apply_link'] = $this->validateUrl($normalized['apply_link'] ?? null);
-
-        $normalized['official_website'] = $this->validateUrl($normalized['official_website'] ?? null);
-
-        return $normalized;
-        return['is_translated' => false];
-    }
-
-    private function normalizeFields(array $data): array
-    {
-        $fields = [
-            'title',
-            'country',
-            'university',
-            'domain',
-            'level',
-            'description',
-            'details',
-            'benefits',
-            'requirements',
-            'required_documents',
-            'funding_type'
+        \Log::info('Funding type brut:', ['type' => $data['funding_type'] ?? 'null']);
+        $fundingType = $this->normalizeFundingType($data['funding_type'] ?? null);
+        \Log::info('Funding type normalisé:', ['type' => $fundingType]);
+        return [
+            'title' => $data['title'] ?? null,
+            'country' => $data['country'] ?? null,
+            'university' => $data['university'] ?? null,
+            'domain' => $data['domain'] ?? null,
+            'level' => $data['level'] ?? null,
+            'deadline' => $this->parseDate($data['deadline'] ?? '')?->toDateString(),
+            'description' => $data['description'] ?? null,
+            'funding_type' => $fundingType,
+            'benefits' => $data['benefits'] ?? null,
+            'requirements' => $data['requirements'] ?? null,
+            'required_documents' => $data['required_documents'] ?? null,
+            'image' => $data['image'] ?? null,
+            'link' => $data['link'] ?? null,
+            'source' => $data['source'] ?? 'ScholyHub',
         ];
-
-        foreach ($fields as $field) {
-            if (!empty($data[$field])) {
-                $text = $data[$field];
-                // Supprimer les balises HTML
-                $text = strip_tags($text);
-                // Remplacer les espaces multiples par un seul espace
-                $text = preg_replace('/\s+/', ' ', $text);
-                // Mettre la première lettre en majuscule (sauf pour les descriptions qui restent en minuscules)
-                if (!in_array($field, ['description', 'details', 'benefits', 'requirements', 'required_documents'])) {
-                    $text = Str::title($text);
-                }
-                $data[$field] = trim($text);
-            } else {
-                $data[$field] = null;
-            }
-        }
-
-        $urlFields = ['image', 'link', 'apply_link', 'official_website', 'source'];
-        foreach ($urlFields as $field) {
-            if (isset($data[$field]) && is_string($data[$field])) {
-                $data[$field] = trim($data[$field]) ?: null;
-            } else {
-                $data[$field] = null;
-            }
-        }
-
-        return $data;
     }
 
-    // Normalise le nom d'un pays à l'aide d'un dictionnaire.
-    private function normalizeCountry(?string $text): ?string
-    {
-        if (empty($text)) {
-            return null;
-        }
-
-        // Récupère le dictionnaire depuis config/countries.php
-        $map = config('countries', []);
-
-        // Recherche exacte (insensible à la casse)
-        $key = strtolower(trim($text));
-        if (isset($map[$key])) {
-            return $map[$key];
-        }
-
-        // Si le pays n'est pas dans le dictionnaire, on le normalise simplement
-        return Str::title(trim($text));
-    }
-
-    //Normalise le type de financement à l'aide d'un dictionnaire.Retourne "full", "partial", "unfunded" ou null.
     private function normalizeFundingType(?string $type): ?string
     {
-        if (empty($type)) {
+        if (!$type) {
             return null;
         }
 
         $type = strtolower(trim($type));
 
-        // Récupère les dictionnaires depuis config/funding.php
-        $fullKeywords = config('funding.full', []);
-        $partialKeywords = config('funding.partial', []);
-        $unfundedKeywords = config('funding.unfunded', []);
-
-        foreach ($fullKeywords as $keyword) {
-            if (str_contains($type, $keyword)) {
-                return 'full';
-            }
+        if(str_contains($type, 'fully funded') || str_contains($type, 'full')){
+            return 'full';
         }
 
-        foreach ($partialKeywords as $keyword) {
-            if (str_contains($type, $keyword)) {
-                return 'partial';
-            }
+        if(str_contains($type, 'partially funded') || str_contains($type, 'partial') || str_contains($type, 'tuition')){
+            return 'partial';
         }
 
-        foreach ($unfundedKeywords as $keyword) {
-            if (str_contains($type, $keyword)) {
-                return 'unfunded';
-            }
+        if(str_contains($type, 'unfunded')){
+            return 'unfunded';
         }
 
         return null;
-    }
-
-    //Valide l'URL de l'image
-    private function validateImage(?string $url): ?string
-    {
-        return empty($url) ? null : (filter_var($url, FILTER_VALIDATE_URL) ? $url : null);
-    }
-
-    private function validateUrl(?string $url): ?string
-    {
-        return empty($url) ? null : (filter_var($url, FILTER_VALIDATE_URL) ? $url : null);
-    }
-
-    //Supprime les bourses expirées de la base
-    public function removeExpiredScholarships(): int
-    {
-        return Scholarship::whereNotNull('deadline')
-            ->whereDate('deadline', '<', Carbon::today())
-            ->delete();
     }
 }
