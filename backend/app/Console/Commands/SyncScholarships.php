@@ -2,26 +2,26 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Attributes\Description;
-use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Process;
+use App\Services\ScholarshipImporter;
+use App\Models\Scholarship;
 
 class SyncScholarships extends Command
 {
 
     protected $signature = 'scholarships:sync';
-    protected $description = 'Scrape, enrich, import et nettoie les bourses (automatisation complète)';
+    protected $description = 'Scrape, ajout, import et nettoie les bourses (automatisation complète)';
 
     public function handle()
     {
-        $this->info('Synchronisation complète des bourses');
+        $this->info('Synchronisation complète des bourses en cours......');
         $start = now();
 
         $scraperPath = base_path('../scraper');
-        $jsonPath = $scraperPath . '/storage/scholarships.json';
 
         // 1. Scraper les cartes
-        $this->info('Étape 1/4 : Scraping des cartes...');
+        $this->info('Scraping des cartes...');
         $result = Process::path($scraperPath)->run('npm run links');
 
         if (!$result->successful()) {
@@ -31,8 +31,8 @@ class SyncScholarships extends Command
         $this->line($result->output());
 
         // 2. Ajout les données
-        $this->info('Étape 2/4 : Ajout...');
-        $result = Process::path($scraperPath)->run('npm run start');
+        $this->info('Ajout des détails en cours......');
+        $result = Process::path($scraperPath)->run('npm start');
 
         if (!$result->successful()) {
             $this->error('Enrichissement échoué : ' . $result->errorOutput());
@@ -41,21 +41,18 @@ class SyncScholarships extends Command
         $this->line($result->output());
 
         // 3. Importer les bourses (commande Artisan)
-        $this->info('Étape 3/4 : Import dans la base...');
-        $exitCode = $this->call('scholarships:import');
-
-        if ($exitCode !== 0) {
-            $this->error('Import échoué.');
+        $this->info('Import des bourses vers next...');
+        $jsonPath = $scraperPath . '/storage/scholarships.json';
+        if(!file_exists($jsonPath)){
+            $this->error("Fichier scholarships.json introuvable : {$jsonPath}");
             return 1;
         }
+        $importer = app(ScholarshipImporter::class);
+        $stats = $importer->import($jsonPath);
 
-        // 4. Supprimer les bourses expirées (via le service)
-        $this->info('Étape 4/4 : Nettoyage des bourses expirées...');
-        $deleted = app(\App\Services\ScholarshipImporter::class)->removeExpiredScholarships();
-
-        // 5. Récupérer les stats de l'import
-        $stats = $this->getImportStats();
-
+        // Supprimer les bourses expirées (via le service)
+        $this->info('Nettoyage des bourses expirées...');
+        $deleted = $importer->removeExpiredScholarships();
         $duration = now()->diffInSeconds($start);
 
         $this->newLine();
@@ -69,23 +66,28 @@ class SyncScholarships extends Command
         $this->line(" Erreurs            : {$stats['errors']}");
         $this->newLine();
 
+        if (config('locales.translate_enabled', false)){
+            $this->info('Les traductions ont été mises en file automatiquement pendant l\'import.');
+        }
+
         if ($stats['expired'] > 0 || $deleted > 0) {
             $this->warn('Les bourses expirées ont été automatiquement nettoyées.');
         }
 
         return 0;
-    }
 
-    private function getImportStats(): array
-    {
-        // Récupère les stats depuis le cache ou retourne des valeurs par défaut
-        return [
-            'total' => 0,
-            'created' => 0,
-            'updated' => 0,
-            'expired' => 0,
-            'errors' => 0,
-        ];
+        //Traduction en français par défaut
+        $this->info('Traduction des données en cours');
+        $translatedCount = 0;
+        if (config('locales.translate_enabled', false)){
+            $toTranslate = Scholarship::whereNull('title_fr')->get();
+            foreach ($toTranslate as $scholarship){
+                \App\Jobs\TranslateScholarshipJob::dispatch($scholarship);
+                $translatedCount++;
+            }
+            $this->info(" {$translatedCount} bourse(s) mises en file d'attente pour la traduction");
+        } else {
+            $this->info('APP_TRANSLATE=false');
+        }
     }
-
 }

@@ -47,6 +47,8 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::post('/chat', [GeminiController::class, 'chat']); 
     });
 
+    Route::post('/contact', [ContactController::class, 'store']);
+
 });
 
 Route::prefix('cv')->group(function(){
@@ -88,5 +90,3 @@ Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function(){
     Route::get('/profile', [AdminController::class, 'profile']);
     Route::put('/profile', [AdminController::class, 'updateProfile']);
 });
-
-Route::post('/contact', [ContactController::class, 'store']);

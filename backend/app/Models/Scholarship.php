@@ -17,23 +17,30 @@ class Scholarship extends Model
         'level',
         'deadline',
         'description',
+        'details',
         'funding_type',
         'benefits',
         'requirements',
         'required_documents',
         'image',
         'link',
-        'source'
+        'apply_link',          
+        'official_website',
+        'source',
+        'is_translated'
     ];
 
     protected $casts = [
         'deadline' => 'date',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'is_translated' => 'boolean',
     ];
 
     public function favorites()
     {
         return $this->hasMany(Favorite::class);
     }
+
+    
 };

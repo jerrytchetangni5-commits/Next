@@ -39,7 +39,12 @@ return [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLENT_SECRET'),
         'redirect' => env('GOOGLE_REDIRECT_URI', 'http://localhost:4200')
-    ]
+    ],
+
+    'libretranslate' => [
+        'url' => env('LIBRETRANSLATE_URL', 'https://libretranslate.com/translate'),
+        'api_key' => env('LIBRETRANSLATE_API_KEY', null),
+    ],
 
 ];
 
