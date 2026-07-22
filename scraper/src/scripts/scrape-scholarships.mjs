@@ -1,7 +1,6 @@
 import { createCrawler } from "../crawler.mjs";
 import { BASE_URL, SELECTORS, CARD_DATA } from "../sources/selector.mjs";
 import { saveToJson } from "../exporter.mjs";
-import { selectors } from "playwright";
 
 async function main(){
     console.log("Collecte des bourses");
@@ -50,9 +49,6 @@ async function main(){
 
                     const level = card.getAttribute(cardData.degree);
 
-                    const deadlineDays = card.getAttribute(cardData.deadlineDays);
-                    const deadline_days = deadlineDays ? parseInt(deadlineDays, 10) : null;
-
                     const imgEl = card.querySelector(selectors.cardImage);
                     const image = imgEl?.getAttribute("src") || null;
 
@@ -61,9 +57,6 @@ async function main(){
 
                     const excerptEl = card.querySelector(selectors.cardExcerpt);
                     const summary = excerptEl ? clean(excerptEl.textContent) : null;
-                    
-                    const eligibility = card.getAttribute(cardData.eligibility);
-                    const eligibility_preview = eligibility ? clean (eligibility) : null;
 
                     results.push({
                         title,
@@ -72,21 +65,17 @@ async function main(){
                         domain: null,
                         level,
                         deadline: null,
-                        description: null,
+                        description: summary,
+                        details: null,
                         funding_type,
-                        amount: null,
-                        currency: null,
                         benefits: null,
                         requirements: null,
                         required_documents: null,
-                        min_average: null,
-                        required_english_level: null,
-                        languages: null,
                         image,
                         link,
                         summary,
-                        eligibility_preview,
-                        deadline_days,
+                        apply_link: null,
+                        official_website: null,
                         source: "Scholyhub"
                     });
                 });

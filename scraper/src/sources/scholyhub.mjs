@@ -1,5 +1,4 @@
 import { createCrawler } from "../crawler.mjs";
-import { extractAmountAndCurrency } from "../utils.mjs";
 import { SELECTORS } from "./selector.mjs";
 import { DOMAIN_KEYWORDS } from "../config/keywords.mjs";
 
@@ -59,8 +58,8 @@ export async function ajoutScholyHubScholarships(scholarships){
                 };
 
                 //récupère description
-                const aboutBody = document.querySelector(selectors.sections.about + ".sh-info-card__body");
-                const description = aboutBody ? clean(aboutBody.textContent): null;
+                const aboutBody = document.querySelector(selectors.aboutBody);
+                const details = aboutBody ? clean(aboutBody.textContent): null;
 
                 //récupère les avantages
                 const benefits = getListItems(selectors.sections.benefits)?.join(" ") || null;
@@ -85,6 +84,27 @@ export async function ajoutScholyHubScholarships(scholarships){
                                 break;
                             }
                         }
+
+                        if (!domain) {
+                            const genericMap = {
+                                'science': 'Science',
+                                'engineering': 'Engineering',
+                                'business': 'Business',
+                                'law': 'Law',
+                                'medicine': 'Medicine',
+                                'education': 'Education',
+                                'arts': 'Arts',
+                                'humanities': 'Humanities',
+                                'social': 'Social Sciences'
+                            };
+                            for (const [key, value] of Object.entries(genericMap)) {
+                                if (lowerText.includes(key)) {
+                                    domain = value;
+                                    break;
+                                }
+                            }
+                        }
+
                     }    
                 }
 
@@ -106,9 +126,14 @@ export async function ajoutScholyHubScholarships(scholarships){
                     deadline = deadlineEl ? clean(deadlineEl.textContent) : null;
                 }
 
+                //apply_link et official_website
+                const applyLink = document.querySelector(selectors.applyButton)?.href ?? null;
+
+                const officialWebsite = document.querySelector(selectors.officialWebsiteButton)?.href ?? null;
+
                 return{
                     title,
-                    description,
+                    details,
                     benefits,
                     requirements,
                     required_documents: requiredDocuments,
@@ -117,13 +142,11 @@ export async function ajoutScholyHubScholarships(scholarships){
                     level: facts["level"] || facts["degree"] || null,
                     country: facts["location"] || facts["country"] || null,
                     funding_type: facts["funding type"] || facts["funding"] || null,
-                    amount_raw: facts["total reward"] || facts["amount"] || null,
-                    deadline
+                    deadline,
+                    apply_link: applyLink,
+                    official_website: officialWebsite
                 };
             }, {selectors: SELECTORS, domainKeywords: DOMAIN_KEYWORDS});
-
-            //extration du montant et de la devise
-            const { amount, currency } = extractAmountAndCurrency(detailData.amount_raw);
 
             //construction de l'object final
             const added = {
@@ -133,13 +156,14 @@ export async function ajoutScholyHubScholarships(scholarships){
                 funding_type: detailData.funding_type || scholarship.funding_type,
                 domain: detailData.domain || scholarship.domain,
                 university: detailData.university || scholarship.university,
-                description: detailData.description || scholarship.summary,
+                description: detailData.description || scholarship.description,
+                details: detailData.details || scholarship.details,
                 benefits: detailData.benefits || scholarship.benefits,
                 requirements: detailData.requirements || scholarship.requirements,
                 required_documents: detailData.required_documents || scholarship.required_documents,
-                amount: amount || scholarship.amount,
-                currency: currency || scholarship.currency,
-                deadline: detailData.deadline || scholarship.deadline
+                deadline: detailData.deadline || scholarship.deadline,
+                apply_link: detailData.apply_link || scholarship.apply_link || null,
+                official_website: detailData.official_website || scholarship.official_website || null,
             };
 
             results.push(added);
