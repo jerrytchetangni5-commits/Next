@@ -60,7 +60,6 @@ export const SELECTORS = {
     pageTitle: "h1.sh-detail-hero__title",
     countryBadge: ".sh-pill--country",
     university: ".sh-detail-hero__meta-text strong",
-    aboutBody: "#sh-about .sh-info-card__body",
     heroImage: ".sh-detail-hero img",
 
     //Quick facts
@@ -70,18 +69,18 @@ export const SELECTORS = {
 
     //sections
     sections: {
+        infoCard: ".sh-info-card",
         about: "#sh-about",
         benefits: "#sh-benefits",
         eligibility: "#sh-eligibility",
         documents: "#sh-documents",
+        application: "#sh-application",
     },
     listItems: ".sh-detail-list li",
     
     //apply card
-    applyCard: ".sh-apply-card",
-    applyButton: ".sh-apply-card .sh-btn--coral",
-    officialWebsiteButton: ".sh-apply-card .sh-btn--ghost",
     deadlineDate: ".sh-apply-card__deadline-date",
+    applyButton: ".sh-apply-card a"
 };
 
 export const CARD_DATA = {
