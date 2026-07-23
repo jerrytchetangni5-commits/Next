@@ -40,7 +40,7 @@ class ContextBuilder
         if($filters && is_array($filters)){
             $context .= "**Recherche demandé par l'utilisateur :**\n";
             $context .= json_encode($filters, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) . "\n\n";
-            $results = this->searchScholarships($filters);
+            $results = $this->searchScholarships($filters);
 
             if (!empty($results)){
                 $context .= "**Bourses trouvées dans next :**\n";
