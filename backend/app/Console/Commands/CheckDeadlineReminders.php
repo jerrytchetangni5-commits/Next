@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Models\User;
 use App\Models\Favorite;
 use App\Models\Notification;
 use App\Mail\DeadlineReminderMail;
@@ -32,7 +31,6 @@ class CheckDeadlineReminders extends Command
             //le & devant $count modifie la variable originale sinon le compteur resterait à 0 à la fin
             
             ->chunk(20, function ($favorites) use ($today, &$count){
-                $this->info("Nombre de favoris dans le chunk: " . $favorites->count());
 
                 foreach ($favorites as $favorite){
                     $scholarship = $favorite->scholarship;
@@ -43,17 +41,10 @@ class CheckDeadlineReminders extends Command
                     }
 
                     $deadline = Carbon::parse($scholarship->deadline);
+                    $daysLeft = $today->diffInDays($deadline, false);
+                    $reminderDays = config('notifications.reminder_days', [30, 14, 7, 3, 1]);
 
-                    // Convertir les jours en int et le tableau en ints
-                    $daysLeft = (int) $today->diffInDays($deadline, false);
-                    $reminderDays = [30, 14, 7, 3, 1];
-                    $reminderDays = array_map('intval', $reminderDays); // ← force les ints
-
-                    $this->info("{$scholarship->title} -> {$daysLeft} jours restants");
-
-                    $this->info("Vérification jours {$daysLeft} dans la liste" . json_encode($reminderDays));
-
-                    if (!in_array($daysLeft, $reminderDays, true)) { // ← comparaison stricte
+                    if (!in_array($daysLeft, $reminderDays)){
                         continue;
                     }
 
@@ -68,7 +59,6 @@ class CheckDeadlineReminders extends Command
                     }
 
                     $title = match($daysLeft) {
-                        168 => "Plus que 168 jours !",
                         30 => "Plus que 30 jours !",
                         14 => "Plus que 14 jours !",
                         7 => "Plus que 7 jours !",
@@ -91,7 +81,7 @@ class CheckDeadlineReminders extends Command
                     ]);
 
                     try{
-                        Mail::to($user->email)->send(new DeadlineReminderMail($scholarship, $daysLeft, $user->first_name));
+                        Mail::to($user->email)->send(new DeadlineReminderMail($scholarship, $daysLeft));
                         $count++;
                     } catch (\Exception $e) {
                         \Log::error("Erreur envoi email à {$user->email} : " . $e->getMessage());

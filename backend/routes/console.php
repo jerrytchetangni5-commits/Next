@@ -10,7 +10,7 @@ Artisan::command('inspire', function () {
 
 
 Schedule::command('notify:deadlines')
-    ->dailyAt('19:48')
+    ->dailyAt('11:30')
     ->withoutOverlapping();
 
 

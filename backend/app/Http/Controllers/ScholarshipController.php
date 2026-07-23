@@ -27,7 +27,7 @@ class ScholarshipController extends Controller
                 'message' => 'Scholarship not found'
             ], 404);
         }
-        return response()->json([
+        return respose()->json([
             'success' => true,
             'data' => $scholarship
         ]);

@@ -42,12 +42,12 @@ Route::middleware('auth:sanctum')->group(function(){
 
     Route::get('/user/dashboard', [UserDashboardController::class, 'index']);
     Route::get('/user/recommendation', [UserRecommendationController::class, 'index']);  
+
+    Route::post('/contact', [ContactController::class, 'store']);
     
     Route::prefix('gemini')->group(function(){
         Route::post('/chat', [GeminiController::class, 'chat']); 
     });
-
-    Route::post('/contact', [ContactController::class, 'store']);
 
 });
 
@@ -90,3 +90,4 @@ Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function(){
     Route::get('/profile', [AdminController::class, 'profile']);
     Route::put('/profile', [AdminController::class, 'updateProfile']);
 });
+

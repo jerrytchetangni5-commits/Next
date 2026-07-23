@@ -62,7 +62,7 @@ class AuthGoogleController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Connexion avec Google réussi',
+            'message' => 'Connexion réussie avec Google',
             'data' => [
                 'user' => [
                     'id' => $user->id,
