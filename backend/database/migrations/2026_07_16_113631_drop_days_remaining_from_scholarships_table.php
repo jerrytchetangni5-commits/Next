@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('scholarships', function (Blueprint $table) {
-            $table->integer('days_remaining')->nullable()->after('benefits');
+            $table->integer('days_remaining')->nullable();
         });
     }
 };

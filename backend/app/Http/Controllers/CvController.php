@@ -31,9 +31,10 @@ class CvController extends Controller
             'slug' => $template->slug,
             'blade_view' => $template->blade_view,
             'preview_image' => $template->preview_image,
+            'description' => $template->description,
             'is_active' => $template->is_active,
             'created_at' => $template->created_at,
-            'updated_at' => $template->updated_at
+            'updated_at' => $template->updated_at,
         ];
     });
 

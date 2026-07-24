@@ -8,29 +8,21 @@ use App\Models\Contact;
 class ContactController extends Controller
 {
     public function store(Request $request)
-{
-    $user = Auth::user();
-    if (!$user) {
-        return response()->json(['success' => false, 'message' => 'Connectez-vous'], 401);
+    {
+        $validated = $request->validate([
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
+            'email' => 'required|email|',
+            'phone_number' => 'required|string',
+            'message' => 'required|string'
+        ]);
+
+        $contact = Contact::create($validated);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Message envoyé',
+            'data' => $contact
+        ], 201);
     }
-
-    $validated = $request->validate([
-        'message' => 'required|string',
-        'phone_number' => 'nullable|string',
-    ]);
-
-    $contact = Contact::create([
-        'user_id' => $user->id,
-        'first_name' => $user->first_name,
-        'last_name' => $user->last_name,
-        'email' => $user->email,
-        'phone_number' => $validated['phone_number'] ?? null,
-        'message' => $validated['message'],
-    ]);
-
-    // Envoi email à l'admin
-    Mail::to('setonjerry23@gmail.com')->send(...);
-
-    return response()->json(['success' => true, 'data' => $contact]);
-}
 }

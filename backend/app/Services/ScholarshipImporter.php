@@ -124,9 +124,6 @@ class ScholarshipImporter
 
     private function prepareData(array $data): array
     {
-        \Log::info('Funding type brut:', ['type' => $data['funding_type'] ?? 'null']);
-        $fundingType = $this->normalizeFundingType($data['funding_type'] ?? null);
-        \Log::info('Funding type normalisé:', ['type' => $fundingType]);
         return [
             'title' => $data['title'] ?? null,
             'country' => $data['country'] ?? null,
@@ -135,7 +132,7 @@ class ScholarshipImporter
             'level' => $data['level'] ?? null,
             'deadline' => $this->parseDate($data['deadline'] ?? '')?->toDateString(),
             'description' => $data['description'] ?? null,
-            'funding_type' => $fundingType,
+            'funding_type' => $this->normalizeFundingType($data['funding_type'] ?? null),
             'benefits' => $data['benefits'] ?? null,
             'requirements' => $data['requirements'] ?? null,
             'required_documents' => $data['required_documents'] ?? null,

@@ -9,30 +9,30 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('scholarships', function (Blueprint $table) {
-            $table->string('university')->nullable()->change();
-            $table->string('domain')->nullable()->change();
-            $table->string('level')->nullable()->change();
-            $table->string('funding_type')->nullable()->change();
-            $table->text('benefits')->nullable()->change();
-            $table->text('requirements')->nullable()->change();
-            $table->text('required_documents')->nullable()->change();
-            $table->string('image')->nullable()->change();
-            $table->string('source')->nullable()->change();
+            $table->string('university')->nullable();
+            $table->string('domain')->nullable();
+            $table->string('level')->nullable();
+            $table->string('funding_type')->nullable();
+            $table->text('benefits')->nullable();
+            $table->text('requirements')->nullable();
+            $table->text('required_documents')->nullable();
+            $table->string('image')->nullable();
+            $table->string('source')->nullable();
         });
     }
 
     public function down(): void
     {
         Schema::table('scholarships', function (Blueprint $table) {
-            $table->string('university')->nullable(false)->change();
-            $table->string('domain')->nullable(false)->change();
-            $table->string('level')->nullable(false)->change();
-            $table->string('funding_type')->nullable(false)->change();
-            $table->text('benefits')->nullable(false)->change();
-            $table->text('requirements')->nullable(false)->change();
-            $table->text('required_documents')->nullable(false)->change();
-            $table->string('image')->nullable(false)->change();
-            $table->string('source')->nullable(false)->change();
+            $table->string('university')->nullable(false);
+            $table->string('domain')->nullable(false);
+            $table->string('level')->nullable(false);
+            $table->string('funding_type')->nullable(false);
+            $table->text('benefits')->nullable(false);
+            $table->text('requirements')->nullable(false);
+            $table->text('required_documents')->nullable(false);
+            $table->string('image')->nullable(false);
+            $table->string('source')->nullable(false);
         });
     }
 };

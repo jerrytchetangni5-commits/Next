@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('scholarships', function (Blueprint $table) {
-            $table->text('required_documents')->nullable()->after('requirements');
+            $table->text('required_documents')->nullable();
         });
     }
 

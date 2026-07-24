@@ -1,0 +1,11 @@
+scraper/
+.git
+.env
+node_modules
+vendor
+backend/vendor
+backend/node_modules
+backend/storage/logs/*
+backend/storage/framework/cache/*
+backend/storage/framework/sessions/*
+backend/storage/framework/views/*
