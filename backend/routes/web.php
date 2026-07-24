@@ -7,7 +7,7 @@ Route::get('/', function () {
 });
 
 Route::get('/reset-password/{token}', function ($token) {
-    return redirect('http://localhost:4200/reset-password/' . $token);
+    return redirect('https://next-hj.vercel.app/reset-password/' . $token);
 })->name('password.reset');
 
 
