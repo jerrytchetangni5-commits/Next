@@ -47,6 +47,8 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::post('/chat', [GeminiController::class, 'chat']); 
     });
 
+    Route::post('/contact', [ContactController::class, 'store']);
+
 });
 
 Route::prefix('cv')->group(function(){
@@ -61,6 +63,8 @@ Route::prefix('cv')->group(function(){
         Route::put('/mycvs/{id}', [CvController::class, 'update']);
         Route::delete('/mycvs/{id}', [CvController::class, 'destroy']);
     });
+
+    
 });
 
 Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
@@ -89,4 +93,4 @@ Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function(){
     Route::put('/profile', [AdminController::class, 'updateProfile']);
 });
 
-Route::post('/contact', [ContactController::class, 'store']);
+
