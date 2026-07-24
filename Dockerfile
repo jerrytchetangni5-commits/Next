@@ -31,6 +31,12 @@ COPY docker/supervisord.conf /etc/supervisord.conf
 COPY docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
+COPY backend/ .
+
+RUN mkdir -p bootstrap/cache storage/framework/sessions storage/framework/views storage/framework/cache storage/logs \
+    && chmod -R 775 bootstrap/cache storage \
+    && composer dump-autoload --optimize
+
 EXPOSE 10000
 
 ENTRYPOINT ["/entrypoint.sh"]
