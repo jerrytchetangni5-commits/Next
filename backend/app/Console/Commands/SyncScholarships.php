@@ -66,28 +66,10 @@ class SyncScholarships extends Command
         $this->line(" Erreurs            : {$stats['errors']}");
         $this->newLine();
 
-        if (config('locales.translate_enabled', false)){
-            $this->info('Les traductions ont été mises en file automatiquement pendant l\'import.');
-        }
-
         if ($stats['expired'] > 0 || $deleted > 0) {
             $this->warn('Les bourses expirées ont été automatiquement nettoyées.');
         }
 
         return 0;
-
-        //Traduction en français par défaut
-        $this->info('Traduction des données en cours');
-        $translatedCount = 0;
-        if (config('locales.translate_enabled', false)){
-            $toTranslate = Scholarship::whereNull('title_fr')->get();
-            foreach ($toTranslate as $scholarship){
-                \App\Jobs\TranslateScholarshipJob::dispatch($scholarship);
-                $translatedCount++;
-            }
-            $this->info(" {$translatedCount} bourse(s) mises en file d'attente pour la traduction");
-        } else {
-            $this->info('APP_TRANSLATE=false');
-        }
     }
 }

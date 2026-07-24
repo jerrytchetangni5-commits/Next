@@ -66,4 +66,9 @@ return [
     */
     'max_history_length' => 5,
 
+    'temperature' => 0.1,
+
+
+    
+
 ];
