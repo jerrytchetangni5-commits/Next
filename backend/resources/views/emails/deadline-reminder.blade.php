@@ -91,7 +91,7 @@
                             <table role="presentation" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td align="center" bgcolor="#4A0F18" style="border-radius:8px;">
-                                        <a href="{{ config('app.frontend_url', 'http://localhost:4200') }}/scholarships/{{ $scholarship->id }}" target="_blank" style="display:inline-block; padding:14px 36px; font-size:16px; font-weight:600; color:#ffffff; text-decoration:none; border-radius:8px;">
+                                        <a href="{{ config('app.frontend_url', 'https://next-hj.vercel.app') }}/scholarships/{{ $scholarship->id }}" target="_blank" style="display:inline-block; padding:14px 36px; font-size:16px; font-weight:600; color:#ffffff; text-decoration:none; border-radius:8px;">
                                             Voir la bourse
                                         </a>
                                     </td>
