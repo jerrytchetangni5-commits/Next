@@ -1,4 +1,4 @@
-FROM php:8.3-fpm-alpine AS base
+﻿FROM php:8.3-fpm-alpine AS base
 
 RUN apk add --no-cache \
     bash \
@@ -21,7 +21,9 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-script
 
 COPY backend/ .
 
-RUN composer dump-autoload --optimize
+RUN mkdir -p bootstrap/cache storage/framework/sessions storage/framework/views storage/framework/cache storage/logs \
+    && chmod -R 775 bootstrap/cache storage \
+    && composer dump-autoload --optimize
 
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
@@ -30,12 +32,6 @@ COPY docker/nginx.conf /etc/nginx/http.d/default.conf
 COPY docker/supervisord.conf /etc/supervisord.conf
 COPY docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
-
-COPY backend/ .
-
-RUN mkdir -p bootstrap/cache storage/framework/sessions storage/framework/views storage/framework/cache storage/logs \
-    && chmod -R 775 bootstrap/cache storage \
-    && composer dump-autoload --optimize
 
 EXPOSE 10000
 
