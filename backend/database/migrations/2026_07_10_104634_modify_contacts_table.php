@@ -9,19 +9,19 @@ return new class extends Migration
 {
     public function up(): void
     {
-        DB::table('contacts')->update([
-            'phone_number' => DB::raw("REGEXP_REPLACE(phone_number, '[^0-9]', '')")
-        ]);
-
         Schema::table('contacts', function (Blueprint $table) {
-            $table->integer('phone_number');
+            if (!Schema::hasColumn('contacts', 'phone_number')) {
+                $table->integer('phone_number');
+            }
         });
     }
-
     public function down(): void
     {
         Schema::table('contacts', function (Blueprint $table) {
-            $table->string('phone_number')->change();
+            // CORRECTION : On supprime la colonne, on ne la recrée pas !
+            if (Schema::hasColumn('contacts', 'phone_number')) {
+                $table->dropColumn('phone_number');
+            }
         });
     }
 };
