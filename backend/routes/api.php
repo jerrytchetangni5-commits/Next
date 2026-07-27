@@ -124,3 +124,39 @@ Route::post('/cron/sync-scholarships', function (Request $request) {
         'import_output' => $output,
     ]);
 });
+
+
+Route::get('/debug/cv-templates', function (Request $request) {
+    if ($request->header('X-Cron-Secret') !== config('services.cron_secret')) {
+        abort(403, 'Non autorisé');
+    }
+    
+    $count = DB::table('cv_templates')->count();
+    $templates = DB::table('cv_templates')->limit(3)->get();
+    
+    return response()->json([
+        'cv_templates_count' => $count,
+        'sample_templates' => $templates,
+    ]);
+});
+
+Route::post('/debug/seed-cv', function (Request $request) {
+    if ($request->header('X-Cron-Secret') !== config('services.cron_secret')) {
+        abort(403, 'Non autorisé');
+    }
+    
+    try {
+        // Le flag --force est indispensable en production
+        Artisan::call('db:seed', ['--class' => 'CvTemplateSeeder', '--force' => true]);
+        
+        return response()->json([
+            'status' => 'ok',
+            'output' => Artisan::output()
+        ]);
+    } catch (\Throwable $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage()
+        ], 500);
+    }
+});
