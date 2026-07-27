@@ -1,4 +1,3 @@
-import { finalization } from "process";
 import { loadFromJson, saveToJson, fileExists } from "./exporter.mjs";
 import { ajoutScholyHubScholarships } from "./sources/scholyhub.mjs";
 
