@@ -8,7 +8,18 @@ RUN apk add --no-cache \
     libzip-dev \
     oniguruma-dev \
     nginx \
-    supervisor
+    supervisor \
+    nodejs \
+    npm \
+    chromium \
+    nss \
+    freetype \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont
+
+ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+ENV PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
 RUN docker-php-ext-install pdo pdo_pgsql zip mbstring
 
@@ -27,6 +38,13 @@ RUN mkdir -p bootstrap/cache storage/framework/sessions storage/framework/views 
 
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+
+WORKDIR /var/www/scraper
+COPY scraper/package.json scraper/package-lock.json ./
+RUN npm install
+COPY scraper/ .
+
+WORKDIR /var/www/html
 
 COPY docker/nginx.conf /etc/nginx/http.d/default.conf
 COPY docker/supervisord.conf /etc/supervisord.conf
