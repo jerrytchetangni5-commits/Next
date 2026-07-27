@@ -25,6 +25,7 @@ Route::get('/scholarships/countries', [ScholarshipController::class, 'countries'
 Route::get('/scholarships/search', [ScholarshipController::class, 'search']);
 Route::get('/scholarships/countries/{country}/scholarships', [ScholarshipController::class, 'byCountry']);
 Route::get('/scholarships/{id}', [ScholarshipController::class, 'show']);
+Route::get('/statistics', [ScholarshipController::class, 'statistics']);
 
 
 

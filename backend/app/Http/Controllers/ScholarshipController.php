@@ -86,4 +86,20 @@ class ScholarshipController extends Controller
             'message' => 'Aucune bourse trouvée pour ce pays'
         ], 404);
     }
+
+    public function statistics(){
+        $today = now();
+        $totalScholarships = Scholarship::where('deadline', '>=', $today)->count();
+        $totalCountries = Scholarship::where('deadline', '>=', $today)->distinct('country')->count('country');
+        $totalUniversities = Scholarship::where('deadline', '>=', $today)->whereNotNull('university')->distinct('university')->count('university');
+
+        return response()->json([
+            'success' =>true,
+            'data' => [
+                'scholarships' => $totalScholarships,
+                'countries' => $totalCountries,
+                'universities' => $totalUniversities
+            ]
+        ]);
+    }
 }

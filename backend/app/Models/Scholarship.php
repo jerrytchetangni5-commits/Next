@@ -23,6 +23,9 @@ class Scholarship extends Model
         'required_documents',
         'image',
         'link',
+        'apply_link',
+        'official_website',
+        'details',
         'source'
     ];
 

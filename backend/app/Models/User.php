@@ -18,6 +18,7 @@ use App\Notifications\CustomResetPassword;
     'first_name',
     'last_name',
     'email',
+    'google_id',
     'password',
     'country',
     'role',
@@ -26,12 +27,7 @@ use App\Notifications\CustomResetPassword;
     'gender',
     'study_level',
     'study_domain',
-    'average',
-    'languages',
-    'english_level',
-    'skills',
-    'experiences',
-    'interests'
+    'destinations_countries'
 
 ])]
 #[Hidden(['password', 'remember_token'])]
@@ -50,13 +46,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'languages' => 'array',
-            'skills' => 'array',
-            'experiences' => 'array',
-            'interests' => 'array',
-            'destination_countries' => 'array',
-            'birth_date' => 'date',
-            'average' => 'decimal:2'
+            'birth_date' => 'date'
 
         ];
     }
