@@ -104,37 +104,23 @@ Route::post('/cron/sync-scholarships', function (Request $request) {
 
     $data = $request->input('scholarships', []);
     $path = storage_path('app/scholarships-sync.json');
-    file_put_contents($path, json_encode($data));
+    file_put_contents($path, json_encode($data, JSON_UNESCAPED_UNICODE));
 
-    Artisan::call('scholarships:import', ['path' => $path]);
-
-    return response()->json(['status' => 'ok', 'count' => count($data)]);
-});
-
-Route::post('/cron/notify-deadlines', function (Request $request) {
-    if ($request->header('X-Cron-Secret') !== config('services.cron_secret')) {
-        abort(403);
+    try {
+        Artisan::call('scholarships:import', ['path' => $path]);
+        $output = Artisan::output();
+    } catch (\Throwable $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+        ], 500);
     }
 
-    Artisan::call('notify:deadlines');
-
-    return response()->json(['status' => 'ok']);
-});
-
-Route::get('/debug/counts', function (Request $request) {
-    // 1. Sécurité : on garde la vérification du secret
-    if ($request->header('X-Cron-Secret') !== config('services.cron_secret')) {
-        abort(403, 'Non autorisé');
-    }
-
-    // 2. Chemin où la route est censée avoir écrit le fichier
-    $path = storage_path('app/scholarships-sync.json');
-    
-    // 3. Retourner un état complet de la situation
     return response()->json([
-        'scholarships_in_db' => DB::table('scholarships')->count(),
-        'notifications_in_db' => DB::table('notifications')->count(),
-        'sync_file_exists' => file_exists($path),
-        'sync_file_size_bytes' => file_exists($path) ? filesize($path) : 0,
+        'status' => 'ok',
+        'count' => count($data),
+        'import_output' => $output,
     ]);
 });
