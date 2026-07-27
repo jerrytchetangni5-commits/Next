@@ -29,20 +29,33 @@ jobs:
           npm run links
           npm run start
 
+      - name: Check scraped file size
+        working-directory: scraper
+        run: |
+          ls -lh storage/scholarships.json
+          wc -c storage/scholarships.json
+
       - name: Send data to backend
         working-directory: scraper
         run: |
           node -e "
           const fs = require('fs');
           const data = JSON.parse(fs.readFileSync('storage/scholarships.json', 'utf-8'));
+          console.log('Sending', data.length, 'scholarships, payload size:', JSON.stringify(data).length, 'bytes');
           fetch('https://next-cnb4.onrender.com/api/cron/sync-scholarships', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
+              'User-Agent': 'GitHub-Actions-Scraper/1.0',
               'X-Cron-Secret': process.env.CRON_SECRET
             },
             body: JSON.stringify({ scholarships: data })
-          }).then(r => r.json()).then(console.log).catch(e => { console.error(e); process.exit(1); });
+          }).then(async r => {
+            const text = await r.text();
+            console.log('Status:', r.status);
+            console.log('Response:', text.substring(0, 500));
+            if (!r.ok) process.exit(1);
+          }).catch(e => { console.error(e); process.exit(1); });
           "
         env:
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
