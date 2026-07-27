@@ -15,6 +15,8 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AuthGoogleController;
 use App\Http\Controllers\GeminiController;
 use App\Http\Controllers\NotificationController;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Http\Request;
 
 
 Route::get('/scholarships', [ScholarshipController::class, 'index']);
@@ -94,16 +96,26 @@ Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function(){
 });
 
 
-Route::get('/test-smtp', function () {
-    try {
-        Mail::raw('Ceci est un test SMTP', function ($message) {
-            $message->to('0v51iia0kc@yzcalo.com')->subject('Test SMTP Render');
-        });
-        return response()->json(['status' => 'sent']);
-    } catch (\Exception $e) {
-        return response()->json([
-            'error' => $e->getMessage(),
-            'class' => get_class($e),
-        ], 500);
+Route::post('/cron/sync-scholarships', function (Request $request) {
+    if ($request->header('X-Cron-Secret') !== config('services.cron_secret')) {
+        abort(403);
     }
+
+    $data = $request->input('scholarships', []);
+    $path = storage_path('app/scholarships-sync.json');
+    file_put_contents($path, json_encode($data));
+
+    Artisan::call('scholarships:import', ['path' => $path]);
+
+    return response()->json(['status' => 'ok', 'count' => count($data)]);
+});
+
+Route::post('/cron/notify-deadlines', function (Request $request) {
+    if ($request->header('X-Cron-Secret') !== config('services.cron_secret')) {
+        abort(403);
+    }
+
+    Artisan::call('notify:deadlines');
+
+    return response()->json(['status' => 'ok']);
 });

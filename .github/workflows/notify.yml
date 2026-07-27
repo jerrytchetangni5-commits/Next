@@ -2,8 +2,8 @@ name: Notify deadlines
 
 on:
   schedule:
-    - cron: '0 8 * * *'
-  workflow_dispatch:
+    - cron: '0 8 * * *' # Tous les jours à 8h00
+  workflow_dispatch: # Permet de le lancer manuellement
 
 jobs:
   notify:
@@ -11,5 +11,5 @@ jobs:
     steps:
       - name: Trigger notifications
         run: |
-          curl -f -X POST https://next-cnb4.onrender.com/cron/notify-deadlines \
+          curl -f -X POST https://next-cnb4.onrender.com/api/cron/notify-deadlines \
             -H "X-Cron-Secret: ${{ secrets.CRON_SECRET }}"

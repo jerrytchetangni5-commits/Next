@@ -2,8 +2,8 @@ name: Scrape scholarships
 
 on:
   schedule:
-    - cron: '0 0 */2 * *'
-  workflow_dispatch:
+    - cron: '0 0 */2 * *' # Tous les 2 jours à minuit
+  workflow_dispatch: # Permet de le lancer manuellement
 
 jobs:
   scrape:
@@ -35,7 +35,7 @@ jobs:
           node -e "
           const fs = require('fs');
           const data = JSON.parse(fs.readFileSync('storage/scholarships.json', 'utf-8'));
-          fetch('https://next-cnb4.onrender.com/cron/sync-scholarships', {
+          fetch('https://next-cnb4.onrender.com/api/cron/sync-scholarships', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
