@@ -17,6 +17,7 @@ use App\Http\Controllers\GeminiController;
 use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 
 Route::get('/scholarships', [ScholarshipController::class, 'index']);
@@ -118,4 +119,22 @@ Route::post('/cron/notify-deadlines', function (Request $request) {
     Artisan::call('notify:deadlines');
 
     return response()->json(['status' => 'ok']);
+});
+
+Route::get('/debug/counts', function (Request $request) {
+    // 1. Vérification de sécurité (même que pour les Cron)
+    if ($request->header('X-Cron-Secret') !== config('services.cron_secret')) {
+        abort(403, 'Non autorisé');
+    }
+
+    // 2. Comptage des données (utilisation de DB::table pour éviter les erreurs si les Modèles ont des noms différents)
+    $scholarshipsCount = DB::table('scholarships')->count();
+    
+    // Remplace 'notifications' par le vrai nom de ta table si elle s'appelle autrement (ex: 'reminder_logs')
+    $notificationsCount = DB::table('notifications')->count(); 
+
+    return response()->json([
+        'scholarships' => $scholarshipsCount,
+        'notifications' => $notificationsCount,
+    ]);
 });
