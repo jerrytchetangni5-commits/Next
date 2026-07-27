@@ -122,19 +122,19 @@ Route::post('/cron/notify-deadlines', function (Request $request) {
 });
 
 Route::get('/debug/counts', function (Request $request) {
-    // 1. Vérification de sécurité (même que pour les Cron)
+    // 1. Sécurité : on garde la vérification du secret
     if ($request->header('X-Cron-Secret') !== config('services.cron_secret')) {
         abort(403, 'Non autorisé');
     }
 
-    // 2. Comptage des données (utilisation de DB::table pour éviter les erreurs si les Modèles ont des noms différents)
-    $scholarshipsCount = DB::table('scholarships')->count();
+    // 2. Chemin où la route est censée avoir écrit le fichier
+    $path = storage_path('app/scholarships-sync.json');
     
-    // Remplace 'notifications' par le vrai nom de ta table si elle s'appelle autrement (ex: 'reminder_logs')
-    $notificationsCount = DB::table('notifications')->count(); 
-
+    // 3. Retourner un état complet de la situation
     return response()->json([
-        'scholarships' => $scholarshipsCount,
-        'notifications' => $notificationsCount,
+        'scholarships_in_db' => DB::table('scholarships')->count(),
+        'notifications_in_db' => DB::table('notifications')->count(),
+        'sync_file_exists' => file_exists($path),
+        'sync_file_size_bytes' => file_exists($path) ? filesize($path) : 0,
     ]);
 });
