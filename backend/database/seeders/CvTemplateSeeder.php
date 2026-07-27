@@ -19,7 +19,6 @@ class CvTemplateSeeder extends Seeder
                 'slug' => 'vintage',
                 'blade_view' => 'cv.templates.vintage',
                 'preview_image' => 'vintage.png',
-                'description' => 'Style rétro avec tons terre et élégance intemporelle',
                 'is_active' => true,
             ],
 
@@ -28,7 +27,6 @@ class CvTemplateSeeder extends Seeder
                 'slug' => 'premium',
                 'blade_view' => 'cv.templates.premium',
                 'preview_image' => 'premium.png',
-                'description' => 'Design moderne et épuré, idéal pour les profils professionnels',
                 'is_active' => true,
             ],
 
@@ -37,7 +35,6 @@ class CvTemplateSeeder extends Seeder
                 'slug' => 'luxury',
                 'blade_view' => 'cv.templates.luxury',
                 'preview_image' => 'luxury.png',
-                'description' => 'Design sombre et élégant avec accents dorés, idéal pour les profils prestigieux',
                 'is_active' => true,
             ],            
 
@@ -46,7 +43,6 @@ class CvTemplateSeeder extends Seeder
                 'slug' => 'terracotta',
                 'blade_view' => 'cv.templates.terracotta',
                 'preview_image' => 'terracotta.png',
-                'description' => 'Design chaleureux aux tons terre cuite et élégance intemporelle',
                 'is_active' => true,
             ],
 
@@ -55,7 +51,6 @@ class CvTemplateSeeder extends Seeder
                 'slug' => 'minimal',
                 'blade_view' => 'cv.templates.minimal',
                 'preview_image' => 'minimal.png',
-                'description' => 'Design épuré et minimaliste en tons gris',
                 'is_active' => true,
             ],
 
@@ -64,7 +59,6 @@ class CvTemplateSeeder extends Seeder
                 'slug' => 'navy-blue',
                 'blade_view' => 'cv.templates.navy-blue',
                 'preview_image' => 'navy-blue.png',
-                'description' => 'Design moderne avec dominante bleu marine et accents élégants',
                 'is_active' => true,
             ],
 
@@ -73,7 +67,6 @@ class CvTemplateSeeder extends Seeder
                 'slug' => 'forest-green',
                 'blade_view' => 'cv.templates.forest-green',
                 'preview_image' => 'forest-green.png',
-                'description' => 'Design moderne et naturel aux tons verts, élégant et professionnel',
                 'is_active' => true,
             ],
 
@@ -82,7 +75,6 @@ class CvTemplateSeeder extends Seeder
                 'slug' => 'bleu-marine',
                 'blade_view' => 'cv.templates.bleu-marine',
                 'preview_image' => 'bleu-marine.png',
-                'description' => 'Design élégant avec des tons bleu marine et une présentation moderne',
                 'is_active' => true,
             ],
 
@@ -91,7 +83,6 @@ class CvTemplateSeeder extends Seeder
                 'slug' => 'bordeaux',
                 'blade_view' => 'cv.templates.bordeaux',
                 'preview_image' => 'bordeaux.png',
-                'description' => 'Design élégant avec des tons bordeaux, chaleureux et raffiné',
                 'is_active' => true,
             ],
         ];
