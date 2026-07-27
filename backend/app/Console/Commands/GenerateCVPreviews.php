@@ -72,9 +72,6 @@ class GenerateCVPreviews extends Command
             try {
                 $html = view($template->blade_view, ['data' => $testData])->render();
                 $imageData = Browsershot::html($html)
-                    ->setNodeBinary('C:/Program Files/nodejs/node.exe')
-                    ->setNpmBinary('C:/Program Files/nodejs/npm.cmd')
-                    ->setChromePath('C:/Program Files/Google/Chrome/Application/chrome.exe')
                     ->windowSize(800, 1000)
                     ->fullPage()
                     ->screenshot();
