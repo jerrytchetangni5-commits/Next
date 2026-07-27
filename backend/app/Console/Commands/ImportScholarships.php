@@ -2,8 +2,6 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Attributes\Description;
-use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use App\Models\Scholarship;
 use App\Services\ScholarshipImporter;

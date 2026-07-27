@@ -1,0 +1,48 @@
+name: Scrape scholarships
+
+on:
+  schedule:
+    - cron: '0 0 */2 * *'
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        working-directory: scraper
+        run: npm install
+
+      - name: Install Playwright browsers
+        working-directory: scraper
+        run: npx playwright install --with-deps chromium
+
+      - name: Run scraper
+        working-directory: scraper
+        run: |
+          npm run links
+          npm run start
+
+      - name: Send data to backend
+        working-directory: scraper
+        run: |
+          node -e "
+          const fs = require('fs');
+          const data = JSON.parse(fs.readFileSync('storage/scholarships.json', 'utf-8'));
+          fetch('https://next-cnb4.onrender.com/cron/sync-scholarships', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Cron-Secret': process.env.CRON_SECRET
+            },
+            body: JSON.stringify({ scholarships: data })
+          }).then(r => r.json()).then(console.log).catch(e => { console.error(e); process.exit(1); });
+          "
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}

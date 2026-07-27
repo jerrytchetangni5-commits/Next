@@ -1,0 +1,15 @@
+name: Notify deadlines
+
+on:
+  schedule:
+    - cron: '0 8 * * *'
+  workflow_dispatch:
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger notifications
+        run: |
+          curl -f -X POST https://next-cnb4.onrender.com/cron/notify-deadlines \
+            -H "X-Cron-Secret: ${{ secrets.CRON_SECRET }}"
