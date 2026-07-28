@@ -99,6 +99,7 @@ async function main(){
 
             await enqueueLinks({
                 selector: SELECTORS.nextPage,
+                globs: ['https://scholyhub.com/scholarships/page/**']
             });
         }
     );
