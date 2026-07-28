@@ -148,6 +148,7 @@ class ScholarshipImporter
             'level' => $data['level'] ?? null,
             'deadline' => $this->parseDate($data['deadline'] ?? '')?->toDateString(),
             'description' => $data['description'] ?? null,
+            'details' => $data['details'] ?? null,
             'funding_type' => $this->normalizeFundingType($data['funding_type'] ?? null),
             'benefits' => $data['benefits'] ?? null,
             'requirements' => $data['requirements'] ?? null,
