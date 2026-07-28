@@ -6,9 +6,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/index.mjs",
-    "dev": "node --watch src/index.mjs",
-    "links": "node src/scripts/scrape-scholarships.mjs"
+    "scrape:hub": "node src/scripts/scrape-scholarships.mjs",
+    "scrape:ads": "node src/scripts/scrape-scholarshipsads.mjs"
   },
   "keywords": [],
   "author": "",

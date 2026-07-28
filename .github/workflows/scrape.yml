@@ -2,11 +2,11 @@ name: Scrape scholarships
 
 on:
   schedule:
-    - cron: '0 0 */2 * *' # Tous les 2 jours à minuit
-  workflow_dispatch: # Permet de le lancer manuellement
+    - cron: '0 0 */2 * *'
+  workflow_dispatch:
 
 jobs:
-  scrape:
+  scrape-scholyhub:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -23,25 +23,76 @@ jobs:
         working-directory: scraper
         run: npx playwright install --with-deps chromium
 
-      - name: Run scraper
+      - name: Run ScholyHub scraper
         working-directory: scraper
-        run: |
-          npm run links
-          npm run start
+        run: npm run scrape:hub
 
-      - name: Check scraped file size
+      - name: Check scraped file
         working-directory: scraper
         run: |
           ls -lh storage/scholarships.json
           wc -c storage/scholarships.json
 
-      - name: Send data to backend
+      - name: Send ScholyHub data to backend
         working-directory: scraper
         run: |
           node -e "
           const fs = require('fs');
           const data = JSON.parse(fs.readFileSync('storage/scholarships.json', 'utf-8'));
-          console.log('Sending', data.length, 'scholarships, payload size:', JSON.stringify(data).length, 'bytes');
+          console.log('Sending', data.length, 'scholarships from ScholyHub');
+          fetch('https://next-cnb4.onrender.com/api/cron/sync-scholarships', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'User-Agent': 'GitHub-Actions-Scraper/1.0',
+              'X-Cron-Secret': process.env.CRON_SECRET
+            },
+            body: JSON.stringify({ scholarships: data })
+          }).then(async r => {
+            const text = await r.text();
+            console.log('Status:', r.status);
+            console.log('Response:', text.substring(0, 500));
+            if (!r.ok) process.exit(1);
+          }).catch(e => { console.error(e); process.exit(1); });
+          "
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+
+  scrape-scholarshipsads:
+    if: false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        working-directory: scraper
+        run: npm install
+
+      - name: Install Playwright browsers
+        working-directory: scraper
+        run: npx playwright install --with-deps chromium
+
+      - name: Run ScholarshipsAds scraper
+        working-directory: scraper
+        run: npm run scrape:ads
+
+      - name: Check scraped file
+        working-directory: scraper
+        run: |
+          ls -lh data/scholarshipsads-final.json
+          wc -c data/scholarshipsads-final.json
+
+      - name: Send ScholarshipsAds data to backend
+        working-directory: scraper
+        run: |
+          node -e "
+          const fs = require('fs');
+          const data = JSON.parse(fs.readFileSync('data/scholarshipsads-final.json', 'utf-8'));
+          console.log('Sending', data.length, 'scholarships from ScholarshipsAds');
           fetch('https://next-cnb4.onrender.com/api/cron/sync-scholarships', {
             method: 'POST',
             headers: {

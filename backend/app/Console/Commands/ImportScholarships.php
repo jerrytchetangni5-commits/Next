@@ -25,11 +25,12 @@ class ImportScholarships extends Command
             $this->line(" Nouvelles :{$stats['created']}");
             $this->line(" Mise à jours : :{$stats['updated']}");
             $this->line(" Expirées :{$stats['expired']}");
+            $this->line(" Doublons :{$stats['duplicates']}");
             $this->line(" Erreurs :{$stats['errors']}");
             $this->newLine(); 
 
-            if($stats['expired'] > 0){
-                $this->warn('Les bourses expirées sont ignorées.');
+            if($stats['expired'] > 0 || $stats['duplicates'] > 0){
+                $this->warn('Les bourses expirées ou en doublons sont ignorées.');
             }
 
             $this->info('La base next a été synchronisée');

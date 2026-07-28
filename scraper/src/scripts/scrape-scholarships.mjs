@@ -1,6 +1,7 @@
 import { createCrawler } from "../crawler.mjs";
 import { BASE_URL, SELECTORS, CARD_DATA } from "../sources/selector.mjs";
 import { saveToJson } from "../exporter.mjs";
+import { ajoutScholyHubScholarships } from "../sources/scholyhub.mjs";
 
 async function main(){
     console.log("Collecte des bourses");
@@ -9,6 +10,7 @@ async function main(){
     const seenLinks = new Set(); //set pour eviter les doublons c'est comme un tableau qui ne peut contenir des valeurs uniques
 
     //on crée le crawler
+    console.log("Collecte des liens et infos de base")
     const crawler = createCrawler(
         async ({ request, page, enqueueLinks }) => { //requestHandler sera exécuté pour chaque page
             console.log(`Page en cours: ${request.url}`);
@@ -102,9 +104,15 @@ async function main(){
     );
 
     await crawler.run([`${BASE_URL}/scholarships/`]);
+    console.log(`${allScholarships.length} bourses brutes collectées`);
 
-    await saveToJson("data/raw-scholarships.json", allScholarships);
-    console.log(`${allScholarships.length} bourses sauvegardés dans data/raw-scholarships.json`);
+    console.log(`Ajout des données`);
+    const enrichedData = await ajoutScholyHubScholarships(allScholarships);
+    console.log(`${enrichedData.length} bourse enrichies`);
+
+    const finalPath = "storage/scholarships.json";
+    await saveToJson(finalPath, enrichedData);
+    console.log(`${enrichedData.length} bourses sauvegardés dans storage/scholarships.json`);
     console.log("Scraping des bourses terminé.");
 }
 

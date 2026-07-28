@@ -4,12 +4,13 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Process;
+use App\Services\ScholarshipImporter;
 
 class SyncScholarships extends Command
 {
 
     protected $signature = 'scholarships:sync';
-    protected $description = 'Scrape, enrich, import et nettoie les bourses (automatisation complète)';
+    protected $description = 'Scrape, enrich, import et nettoie les bourses (automatisation complète) au niveau des deux sites';
 
     public function handle()
     {
@@ -17,40 +18,65 @@ class SyncScholarships extends Command
         $start = now();
 
         $scraperPath = base_path('../scraper');
-        $jsonPath = $scraperPath . '/storage/scholarships.json';
+        $importer = app(ScholarshipImporter::class);
 
-        // 1. Scraper les cartes
-        $this->info('Étape 1/4 : Scraping des cartes...');
-        $result = Process::path($scraperPath)->run('npm run links');
+        $globalStats = [
+            'total' => 0,
+            'created' => 0,
+            'updated' => 0,
+            'expired' => 0,
+            'duplicates' => 0,
+            'errors' => 0
+        ];
 
-        if (!$result->successful()) {
-            $this->error('Scraping échoué : ' . $result->errorOutput());
-            return 1;
+        // 1. Scraper les sites
+        $this->info('ScholyHub');
+        $result1 = Process::path($scraperPath)->run('npm run scrape:hub');
+
+        if ($result1->successful()) {
+            $this->info('Import Scholyhub en cours...');
+            $stats1 = $importer->import($scraperPath . '/storage/scholarships.json');
+            $this->accumulateStats($globalStats, $stats1);
+        } else {
+            $this->error('Scraping Scholyhub échoué : ' . $result1->errorOutput());
         }
-        $this->line($result->output());
 
-        // 2. Ajout les données
-        $this->info('Étape 2/4 : Ajout...');
-        $result = Process::path($scraperPath)->run('npm run start');
+        $this->info('ScholarshipsAds');
+        $result2 = Process::path($scraperPath)->run('npm run scrape:ads');
 
-        if (!$result->successful()) {
-            $this->error('Enrichissement échoué : ' . $result->errorOutput());
-            return 1;
+        if ($result2->successful()) {
+            $this->info('Import ScholarshipsAds en cours...');
+            $stats2 = $importer->import($scraperPath . '/data/scholarshipsads-final.json');
+            $this->accumulateStats($globalStats, $stats2);
+        } else {
+            $this->error('Scraping ScholarshipsAds échoué : ' . $result2->errorOutput());
         }
-        $this->line($result->output());
-
-        // 3. Importer les bourses (commande Artisan)
-        $this->info('Étape 3/4 : Import dans la base...');
-        $exitCode = $this->call('scholarships:import');
-
-        if ($exitCode !== 0) {
-            $this->error('Import échoué.');
-            return 1;
-        }
+            
+        
 
         // 4. Supprimer les bourses expirées (via le service)
-        $this->info('Étape 4/4 : Nettoyage des bourses expirées...');
-        $deleted = app(\App\Services\ScholarshipImporter::class)->removeExpiredScholarships();
+        $this->info('Nettoyage de la base');
+        $deleted = $importer->removeExptredScholarships();
+        $duration = now()->diffInSeconds($start);
+
+        $this->newLine();
+        $this->info("Synchronisation terminée en {$duration} secondes.");
+        $this->info('RÉSULTATS GLOBAUX');
+        $this->line("Bourses lues: {$globalStats['total']}");
+        $this->line("Nouvelles: {$globalStats['created']}");
+        $this->line("Mises à jour: {$globalStats['updated']}");
+        $this->line("Expirées ignoré: {$globalStats['expired']}");
+        $this->line("Doublons évités: {$globalStats['duplicates']}");
+        $this->line("Supprimées (DB): {$deleted}");
+        $this->line("Erreurs: {$globalStats['errors']}");
+        $this->newLine();
+
+        if ($globalStats['expired'] > 0 || $deleted > 0 || $globalStats['duplicates'] > 0) {
+            $this->warn('Les bourses expirées et les doublons ont été automatiquement filtrés.');
+        }
+
+        return 0;
+
 
         // 5. Récupérer les stats de l'import
         $stats = $this->getImportStats();
@@ -75,16 +101,14 @@ class SyncScholarships extends Command
         return 0;
     }
 
-    private function getImportStats(): array
+    private function accumulateStats(array &$global, array $source): void
     {
-        // Récupère les stats depuis le cache ou retourne des valeurs par défaut
-        return [
-            'total' => 0,
-            'created' => 0,
-            'updated' => 0,
-            'expired' => 0,
-            'errors' => 0,
-        ];
+        $global['total'] += $source['total'] ?? 0;
+        $global['created'] += $source['created'] ?? 0;
+        $global['updated'] += $source['updated'] ?? 0;
+        $global['expired'] += $source['expired'] ?? 0;
+        $global['duplicates'] += $source['duplicates'] ?? 0;
+        $global['errors'] += $source['errors'] ?? 0;
     }
 
 }

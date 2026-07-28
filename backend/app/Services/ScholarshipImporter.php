@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Scholarship;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 
 class ScholarshipImporter
 {
@@ -15,6 +16,7 @@ class ScholarshipImporter
             'created' => 0,
             'updated' => 0,
             'expired' => 0,
+            'duplicates' => 0,
             'errors' => 0
         ];
 
@@ -42,12 +44,20 @@ class ScholarshipImporter
                     continue;
                 }
 
+                //si la bourse est expiré, on l'ignore
                 if($this->isExpired($item)){
                     $stats['expired']++;
                     continue;
                 }
 
                 $prepared = $this->prepareData($item);
+
+                $exists = Scholarship::where('title', $prepared['title'])->exists();
+
+                if ($exists) {
+                    $stats['duplicates']++;
+                    continue; // On saute cette bourse, elle est déjà en base
+                }
 
                 $model = Scholarship::updateOrCreate(
                     ['link' => $prepared['link']],
@@ -64,8 +74,7 @@ class ScholarshipImporter
                 \Log::error('Erreur import bourse', [
                     'title' => $item['title'] ?? 'Inconnu',
                     'link' => $item['link'] ?? 'Inconnu',
-                    'error' => $e->getMessage(),
-                    'trace' => $e->getTraceAsString()
+                    'error' => $e->getMessage()
                 ]);
             }
         }
@@ -78,9 +87,10 @@ class ScholarshipImporter
         $deadline = $item['deadline'] ?? null;
 
         if(empty($deadline)){
-            return false;
+            return true;
         }
 
+        //on garde les bourses ouvertes
         $special = ['rolling', 'open', 'ongoing', 'all year', 'varies', 'not specified'];
         if(in_array(strtolower(trim($deadline)), $special)){
             return false;
@@ -88,10 +98,12 @@ class ScholarshipImporter
 
         $parsed = $this->parseDate($deadline);
 
+        //on rejette les datte invalide
         if (!$parsed){
-            return false;
+            return true;
         }
 
+        //si la date est passé, on la rejette
         return $parsed->isPast();
     }
 
@@ -108,6 +120,10 @@ class ScholarshipImporter
         }
 
         if (preg_match('/^(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})$/', $date, $m)) {
+            return Carbon::parse($m[3] . '-' . $m[2] . '-' . str_pad($m[1], 2, '0', STR_PAD_LEFT));
+        }
+
+        if (preg_match('/^(\d{1,2})([A-Za-z]+)(\d{4})$/', $date, $m)) {
             return Carbon::parse($m[3] . '-' . $m[2] . '-' . str_pad($m[1], 2, '0', STR_PAD_LEFT));
         }
 
@@ -138,6 +154,8 @@ class ScholarshipImporter
             'required_documents' => $data['required_documents'] ?? null,
             'image' => $data['image'] ?? null,
             'link' => $data['link'] ?? null,
+            'apply_link' => $data['apply_link'] ?? null,
+            'official_website' => $data['official_website'] ?? null,
             'source' => $data['source'] ?? 'ScholyHub',
         ];
     }

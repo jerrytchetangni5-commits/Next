@@ -15,6 +15,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AuthGoogleController;
 use App\Http\Controllers\GeminiController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ScholarshipSyncController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -96,6 +97,9 @@ Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function(){
     Route::get('/profile', [AdminController::class, 'profile']);
     Route::put('/profile', [AdminController::class, 'updateProfile']);
 });
+
+
+Route::post('/cron/sync-scholarships', [ScholarshipSyncController::class, 'handle']);
 
 
 Route::post('/cron/sync-scholarships', function (Request $request) {
