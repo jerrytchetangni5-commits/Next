@@ -15,15 +15,15 @@ class AdminSeeder extends Seeder
         User::updateOrCreate(
             //critère de recherche
             [
-                'email' => 'setontchet@gmail.com'
+                'email' => env('ADMIN_EMAIL')
             ],
 
             //données à créer ou mettre à jour
             [
-                'first_name' => env('ADMIN_FIRST_NAME', 'Tonton'),
-                'last_name' => env('ADMIN_LAST_NAME', 'Dollars'),
-                'password' => Hash::make(env('ADMIN_PASSWORD', 'Bebeto23')),
-                'country' => env('ADMIN_COUNTRY', 'Benin'),
+                'first_name' => env('ADMIN_FIRST_NAME'),
+                'last_name' => env('ADMIN_LAST_NAME'),
+                'password' => Hash::make(env('ADMIN_PASSWORD')),
+                'country' => env('ADMIN_COUNTRY'),
                 'role' => env('ADMIN_ROLE', 'admin')
             ]
         );
