@@ -88,7 +88,7 @@ class ScholarshipSeeder extends Seeder
 
         // 5. Rapport final sur les dates ignorées
         if (!empty($this->invalidDates)) {
-            $this->command->warn('Dates ignorées : ' . implode(', ', array_keys($this->invalidDates)));
+            $this->command->warn('Dates ignorées : ' . count($this->invalidDates));
         }
 
         $this->command->info(" " . count($data) . " bourses importées avec succès.");
