@@ -1,9 +1,0 @@
-{
-	"id": "aqQc7yNLrg8twzi",
-	"json": "{\"id\":\"aqQc7yNLrg8twzi\",\"url\":\"https://scholyhub.com/scholarships/sungkyunkwan-university-skku-international-scholarships/\",\"loadedUrl\":\"https://scholyhub.com/scholarships/sungkyunkwan-university-skku-international-scholarships/\",\"uniqueKey\":\"https://scholyhub.com/scholarships/sungkyunkwan-university-skku-international-scholarships\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"__crawlee\":{\"state\":4}},\"handledAt\":\"2026-07-28T17:16:36.651Z\"}",
-	"method": "GET",
-	"orderNo": null,
-	"retryCount": 0,
-	"uniqueKey": "https://scholyhub.com/scholarships/sungkyunkwan-university-skku-international-scholarships",
-	"url": "https://scholyhub.com/scholarships/sungkyunkwan-university-skku-international-scholarships/"
-}

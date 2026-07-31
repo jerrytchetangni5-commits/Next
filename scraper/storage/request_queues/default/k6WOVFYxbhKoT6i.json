@@ -1,9 +1,0 @@
-{
-	"id": "k6WOVFYxbhKoT6i",
-	"json": "{\"id\":\"k6WOVFYxbhKoT6i\",\"url\":\"https://scholyhub.com/scholarships/asian-university-for-women-auw-full-scholarship/\",\"loadedUrl\":\"https://scholyhub.com/scholarships/asian-university-for-women-auw-full-scholarship/\",\"uniqueKey\":\"https://scholyhub.com/scholarships/asian-university-for-women-auw-full-scholarship\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"__crawlee\":{\"state\":4}},\"handledAt\":\"2026-07-28T17:16:08.030Z\"}",
-	"method": "GET",
-	"orderNo": null,
-	"retryCount": 0,
-	"uniqueKey": "https://scholyhub.com/scholarships/asian-university-for-women-auw-full-scholarship",
-	"url": "https://scholyhub.com/scholarships/asian-university-for-women-auw-full-scholarship/"
-}

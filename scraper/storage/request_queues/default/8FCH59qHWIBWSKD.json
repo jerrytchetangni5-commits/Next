@@ -1,9 +1,0 @@
-{
-	"id": "8FCH59qHWIBWSKD",
-	"json": "{\"id\":\"8FCH59qHWIBWSKD\",\"url\":\"https://scholyhub.com/scholarships/new-zealand-scholarships-manaaki/\",\"loadedUrl\":\"https://scholyhub.com/scholarships/new-zealand-scholarships-manaaki/\",\"uniqueKey\":\"https://scholyhub.com/scholarships/new-zealand-scholarships-manaaki\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"__crawlee\":{\"state\":4}},\"handledAt\":\"2026-07-28T17:25:46.850Z\"}",
-	"method": "GET",
-	"orderNo": null,
-	"retryCount": 0,
-	"uniqueKey": "https://scholyhub.com/scholarships/new-zealand-scholarships-manaaki",
-	"url": "https://scholyhub.com/scholarships/new-zealand-scholarships-manaaki/"
-}

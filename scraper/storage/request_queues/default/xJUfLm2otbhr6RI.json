@@ -1,9 +1,0 @@
-{
-	"id": "xJUfLm2otbhr6RI",
-	"json": "{\"id\":\"xJUfLm2otbhr6RI\",\"url\":\"https://scholyhub.com/scholarships/harvard-university-financial-aid/\",\"loadedUrl\":\"https://scholyhub.com/scholarships/harvard-university-financial-aid/\",\"uniqueKey\":\"https://scholyhub.com/scholarships/harvard-university-financial-aid\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"__crawlee\":{\"state\":4}},\"handledAt\":\"2026-07-28T17:29:10.675Z\"}",
-	"method": "GET",
-	"orderNo": null,
-	"retryCount": 0,
-	"uniqueKey": "https://scholyhub.com/scholarships/harvard-university-financial-aid",
-	"url": "https://scholyhub.com/scholarships/harvard-university-financial-aid/"
-}

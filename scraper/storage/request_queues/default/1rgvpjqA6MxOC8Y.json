@@ -1,9 +1,0 @@
-{
-	"id": "1rgvpjqA6MxOC8Y",
-	"json": "{\"id\":\"1rgvpjqA6MxOC8Y\",\"url\":\"https://scholyhub.com/scholarships/erasmus-mundus/\",\"loadedUrl\":\"https://scholyhub.com/scholarships/erasmus-mundus/\",\"uniqueKey\":\"https://scholyhub.com/scholarships/erasmus-mundus\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"__crawlee\":{\"state\":4}},\"handledAt\":\"2026-07-28T17:30:57.109Z\"}",
-	"method": "GET",
-	"orderNo": null,
-	"retryCount": 0,
-	"uniqueKey": "https://scholyhub.com/scholarships/erasmus-mundus",
-	"url": "https://scholyhub.com/scholarships/erasmus-mundus/"
-}

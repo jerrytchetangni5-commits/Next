@@ -1,9 +1,0 @@
-{
-	"id": "gHwB0CUBEwOMgzw",
-	"json": "{\"id\":\"gHwB0CUBEwOMgzw\",\"url\":\"https://scholyhub.com/scholarships/schwarzman-scholars-tsinghua/\",\"loadedUrl\":\"https://scholyhub.com/scholarships/schwarzman-scholars-tsinghua/\",\"uniqueKey\":\"https://scholyhub.com/scholarships/schwarzman-scholars-tsinghua\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"__crawlee\":{\"state\":4}},\"handledAt\":\"2026-07-28T17:25:47.950Z\"}",
-	"method": "GET",
-	"orderNo": null,
-	"retryCount": 0,
-	"uniqueKey": "https://scholyhub.com/scholarships/schwarzman-scholars-tsinghua",
-	"url": "https://scholyhub.com/scholarships/schwarzman-scholars-tsinghua/"
-}
