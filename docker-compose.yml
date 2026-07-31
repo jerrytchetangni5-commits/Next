@@ -1,42 +1,25 @@
 services:
   backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/<owner>/<repo>/next-api:latest
+    container_name: next-backend
+    restart: unless-stopped
+    ports:
+      - "8011:80"
+    volumes:
+      - ./backend/storage:/var/www/html/storage
     depends_on:
       - db
-    ports:
-      - "10000:10000"
-    environment:
-      APP_ENV: local
-      APP_KEY: ${APP_KEY}
-      APP_DEBUG: "true"
-      DB_CONNECTION: pgsql
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_DATABASE: next_local
-      DB_USERNAME: next_user
-      DB_PASSWORD: next_password
-      CRON_SECRET: ${CRON_SECRET}
-      ADMIN_EMAIL: ${ADMIN_EMAIL}
-      ADMIN_FIRST_NAME: ${ADMIN_FIRST_NAME}
-      ADMIN_LAST_NAME: ${ADMIN_LAST_NAME}
-      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
-      ADMIN_COUNTRY: ${ADMIN_COUNTRY}
-      ADMIN_ROLE: admin
-    volumes:
-      - ./scraper/storage/scholarships.json:/shared-data/scholarships.json:ro
-
+    env_file:
+      - ./backend/.env
   db:
-    image: postgres:16-alpine
+    image: postgres:18-alpine
+    container_name: next-db
+    restart: unless-stopped
     environment:
-      POSTGRES_DB: next_local
+      POSTGRES_DB: next_prod
       POSTGRES_USER: next_user
-      POSTGRES_PASSWORD: next_password
+      POSTGRES_PASSWORD: crqkv9oC8QZTsEH6il3DhbeXxM7jwy42
     volumes:
-      - db-data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-
+      - dbdata:/var/lib/postgresql/data
 volumes:
-  db-data:
+  dbdata:

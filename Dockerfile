@@ -38,6 +38,11 @@ COPY docker/supervisord.conf /etc/supervisord.conf
 COPY docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-EXPOSE 10000
+EXPOSE 80
+
+# Installation de Node.js, NPM et Chromium pour Spatie Browsershot (Génération PDF)
+RUN apk add --no-cache nodejs npm chromium nss freetype harfbuzz ca-certificates ttf-freefont
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+RUN npm install -g puppeteer
 
 ENTRYPOINT ["/entrypoint.sh"]
