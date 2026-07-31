@@ -7,7 +7,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: jerrytchetangni5-commits/next/next-api:latest
+  IMAGE_NAME: ${{ github.repository }}/next-api
 
 concurrency:
   group: build-${{ github.head_ref || github.run_id }}
