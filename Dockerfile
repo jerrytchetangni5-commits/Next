@@ -26,7 +26,6 @@ COPY backend/composer.json backend/composer.lock ./
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
 COPY backend/ .
-COPY scraper/ /var/www/scraper/
 
 RUN mkdir -p bootstrap/cache storage/framework/sessions storage/framework/views storage/framework/cache storage/logs \
     && chmod -R 775 bootstrap/cache storage \
