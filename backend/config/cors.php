@@ -7,6 +7,7 @@ return [
     'allowed_methods' => ['*'],
 
     'allowed_origins' => [
+        'https://next.qcdigitalhub.com',
         'https://next-api.qcdigitalhub.com',
         'http://localhost:3000',      // Pour tes tests en local si besoin
         'http://localhost:4200',

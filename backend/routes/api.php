@@ -165,3 +165,28 @@ Route::post('/debug/seed-cv', function (Request $request) {
         ], 500);
     }
 });
+
+// Route pour déclencher les notifications de deadline via GitHub Actions
+Route::post('/cron/notify-deadlines', function (Request $request) {
+    // Vérification de sécurité (optionnelle mais recommandée)
+    if (config('services.cron_secret') && $request->header('X-Cron-Secret') !== config('services.cron_secret')) {
+        abort(403, 'Non autorisé');
+    }
+
+    try {
+        Artisan::call('notify:deadlines');
+        $output = Artisan::output();
+        
+        return response()->json([
+            'status' => 'ok',
+            'message' => 'Notifications déclenchées avec succès',
+            'output' => $output
+        ]);
+    } catch (\Throwable $e) {
+        \Illuminate\Support\Facades\Log::error('Erreur cron notify-deadlines: ' . $e->getMessage());
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage()
+        ], 500);
+    }
+});
