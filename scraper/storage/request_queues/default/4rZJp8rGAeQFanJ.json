@@ -1,0 +1,9 @@
+{
+	"id": "4rZJp8rGAeQFanJ",
+	"json": "{\"id\":\"4rZJp8rGAeQFanJ\",\"url\":\"https://scholyhub.com/scholarships/page/38/\",\"loadedUrl\":\"https://scholyhub.com/scholarships/page/38/\",\"uniqueKey\":\"https://scholyhub.com/scholarships/page/38\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"__crawlee\":{\"crawlDepth\":37,\"state\":4}},\"handledAt\":\"2026-07-28T17:12:42.207Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 0,
+	"uniqueKey": "https://scholyhub.com/scholarships/page/38",
+	"url": "https://scholyhub.com/scholarships/page/38/"
+}

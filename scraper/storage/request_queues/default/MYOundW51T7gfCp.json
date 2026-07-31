@@ -1,0 +1,9 @@
+{
+	"id": "MYOundW51T7gfCp",
+	"json": "{\"id\":\"MYOundW51T7gfCp\",\"url\":\"https://scholyhub.com/scholarships/princeton-university-financial-aid/\",\"loadedUrl\":\"https://scholyhub.com/scholarships/princeton-university-financial-aid/\",\"uniqueKey\":\"https://scholyhub.com/scholarships/princeton-university-financial-aid\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"__crawlee\":{\"state\":4}},\"handledAt\":\"2026-07-28T17:28:55.218Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 0,
+	"uniqueKey": "https://scholyhub.com/scholarships/princeton-university-financial-aid",
+	"url": "https://scholyhub.com/scholarships/princeton-university-financial-aid/"
+}

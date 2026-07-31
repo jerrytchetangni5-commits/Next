@@ -14,7 +14,6 @@ frontend/**
 
 # Scraper
 scraper/node_modules/
-scraper/storage/
 scraper/data/
 scraper/.crawlee/
 
