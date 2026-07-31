@@ -14,8 +14,8 @@ frontend/**
 
 # Scraper
 scraper/node_modules/
-scraper/storage/
-!scraper/storage/scholarships.json
+scraper/storage/key_value_stores
+scraper/storage/request_queues
 scraper/data/
 scraper/.crawlee/
 
