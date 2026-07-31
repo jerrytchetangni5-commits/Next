@@ -1,0 +1,9 @@
+{
+	"id": "T1JjC4fdh94t3yz",
+	"json": "{\"id\":\"T1JjC4fdh94t3yz\",\"url\":\"https://scholyhub.com/scholarships/nus-global-merit-scholarship/\",\"loadedUrl\":\"https://scholyhub.com/scholarships/nus-global-merit-scholarship/\",\"uniqueKey\":\"https://scholyhub.com/scholarships/nus-global-merit-scholarship\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"__crawlee\":{\"state\":4}},\"handledAt\":\"2026-07-28T17:15:32.056Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 0,
+	"uniqueKey": "https://scholyhub.com/scholarships/nus-global-merit-scholarship",
+	"url": "https://scholyhub.com/scholarships/nus-global-merit-scholarship/"
+}
