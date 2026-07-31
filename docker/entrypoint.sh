@@ -26,11 +26,14 @@ php artisan db:seed --class=AdminSeeder --force || true
 php artisan db:seed --class=CvTemplateSeeder --force || true
 php artisan db:seed --class=ScholarshipSeeder --force || true
 
-if [ -f /shared-data/scholarships.json ]; then
+JSON_FILE="/var/www/scraper/storage/scholarships.json"
+
+if [ -f "$JSON_FILE" ]; then
     echo "Importation des bourses en cours"
-    php artisan scholarships:import /shared-data/scholarships.json || echo "L'import a rencontré des avertissement, mais le serveur continue de  démarrer."
+    php artisan scholarships:import "$JSON_FILE" \
+        || echo "L'import a rencontré des avertissements, mais le serveur continue de démarrer."
 else
-    echo "Fichier introuvable"
+    echo "Fichier introuvable : $JSON_FILE"
 fi
 
 php artisan config:cache
