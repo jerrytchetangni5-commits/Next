@@ -1,9 +1,0 @@
-{
-	"id": "XMJNPyz4rAgVJA7",
-	"json": "{\"id\":\"XMJNPyz4rAgVJA7\",\"url\":\"https://scholyhub.com/scholarships/cern-doctoral-student-programme/\",\"loadedUrl\":\"https://scholyhub.com/scholarships/cern-doctoral-student-programme/\",\"uniqueKey\":\"https://scholyhub.com/scholarships/cern-doctoral-student-programme\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"__crawlee\":{\"state\":4}},\"handledAt\":\"2026-07-28T17:23:10.298Z\"}",
-	"method": "GET",
-	"orderNo": null,
-	"retryCount": 0,
-	"uniqueKey": "https://scholyhub.com/scholarships/cern-doctoral-student-programme",
-	"url": "https://scholyhub.com/scholarships/cern-doctoral-student-programme/"
-}

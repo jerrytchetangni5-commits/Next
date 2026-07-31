@@ -1,9 +1,0 @@
-{
-	"id": "tnxUxY2JT0khmOX",
-	"json": "{\"id\":\"tnxUxY2JT0khmOX\",\"url\":\"https://scholyhub.com/scholarships/rwth-aachen-university-scholarship/\",\"loadedUrl\":\"https://scholyhub.com/scholarships/rwth-aachen-university-scholarship/\",\"uniqueKey\":\"https://scholyhub.com/scholarships/rwth-aachen-university-scholarship\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"__crawlee\":{\"state\":4}},\"handledAt\":\"2026-07-28T17:27:56.494Z\"}",
-	"method": "GET",
-	"orderNo": null,
-	"retryCount": 0,
-	"uniqueKey": "https://scholyhub.com/scholarships/rwth-aachen-university-scholarship",
-	"url": "https://scholyhub.com/scholarships/rwth-aachen-university-scholarship/"
-}
