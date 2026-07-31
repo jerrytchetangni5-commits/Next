@@ -1,62 +1,67 @@
 <?php
+
 namespace App\Services;
+
 use App\Models\User;
 use App\Models\Scholarship;
 
 class NextScoreService
 {
     private const WEIGHTS = [ //WEIGHTS définit l'importance relative de chaque critère
-        'domain' => 45,
-        'level' => 15,
-        'languages' => 20,
-        'average' => 10,
-        'english' => 10,
+        'domain' => 50,
+        'level' => 25,
+        'country' => 25,
     ];
 
     public function calculateScore(User $user, Scholarship $scholarship): int
     {
         $score = 0;
+
         $score += $this->scoreDomain($user, $scholarship);
         $score += $this->scoreLevel($user, $scholarship);
-        $score += $this->scoreLanguages($user, $scholarship);
-        $score += $this->scoreAverage($user, $scholarship);
-        $score += $this->scoreEnglish($user, $scholarship);  
+        $score += $this->scoreCountry($user, $scholarship);
+
         //$this->score... appel la méthode qui calcule ce score et l'ajoute au score totale
-        return min(100, (int) round($score)); 
+
+        return min(100, (int) round($score));
+
         //round arrondit à l'entier le plus proche puis int force la conversion en entier
     }
 
     public function getScoreDetails(User $user, Scholarship $scholarship): array
     {
-        return[
+        return [
             'total_score' => $this->calculateScore($user, $scholarship),
             'details' => [
                 'domain' => $this->scoreDomain($user, $scholarship),
                 'level' => $this->scoreLevel($user, $scholarship),
-                'languages' => $this->scoreLanguages($user, $scholarship),
-                'average' => $this->scoreAverage($user, $scholarship),
-                'english' => $this->scoreEnglish($user, $scholarship),            
+                'country' => $this->scoreCountry($user, $scholarship),
             ]
         ];
+
         //retourne le score total et les détails à chaque niveau sous un format tableau
     }
 
     private function scoreDomain(User $user, Scholarship $scholarship): int
     {
-        if(!$user->study_domain || !$scholarship->domain){
+        if (!$user->study_domain || !$scholarship->domain) {
             return 0;
         }
 
         $userDomain = strtolower(trim($user->study_domain));
         $scholarshipDomain = strtolower(trim($scholarship->domain));
 
-        if($userDomain === $scholarshipDomain){
+        if ($userDomain === $scholarshipDomain) {
             return self::WEIGHTS['domain'];
         }
 
-        if(str_contains($userDomain, $scholarshipDomain) || str_contains($scholarshipDomain, $userDomain)){
+        if (
+            str_contains($userDomain, $scholarshipDomain) ||
+            str_contains($scholarshipDomain, $userDomain)
+        ) {
             return (int) (self::WEIGHTS['domain'] / 2);
         }
+
         //str_contains:fonction php vérifie si une chaine contient une sous chaine
 
         return 0;
@@ -64,104 +69,54 @@ class NextScoreService
 
     private function scoreLevel(User $user, Scholarship $scholarship): int
     {
-        if(!$user->study_level || !$scholarship->requirements){
+        if (!$user->study_level || !$scholarship->level) {
             return 0;
         }
 
-        $userLevel = strtolower($user->study_level);
-        $requirements = strtolower($scholarship->requirements);
+        $userLevel = strtolower(trim($user->study_level));
+        $scholarshipLevel = strtolower(trim($scholarship->level));
 
-        if(str_contains($requirements, $userLevel)){
+        if ($userLevel === $scholarshipLevel) {
             return self::WEIGHTS['level'];
         }
-        //on vérifie si le niveau de l'utilisateur est mentionné dans le texte(requirements) pas vraiment reco mmandé 
+
+        if (
+            str_contains($scholarshipLevel, $userLevel) ||
+            str_contains($userLevel, $scholarshipLevel)
+        ) {
+            return (int) (self::WEIGHTS['level'] / 2);
+        }
+
+        //str_contains:fonction php vérifie si une chaine contient une sous chaine
+
         return 0;
     }
 
-    private function scoreLanguages(User $user, Scholarship $scholarship): int
+    private function scoreCountry(User $user, Scholarship $scholarship): int
     {
-        if ((!$user->languages || !$scholarship->languages) || (!$user->languages && !$scholarship->languages)){
+        if (
+            (!$user->destination_countries || !$scholarship->country) ||
+            (!$user->destination_countries && !$scholarship->country)
+        ) {
             return 0;
         }
 
-        $userLanguages = is_array($user->languages)
-            ? $user->languages
-            : json_decode($user->languages, true);
+        $countries = is_array($user->destination_countries)
+            ? $user->destination_countries
+            : json_decode($user->destination_countries, true);
 
-        $requiredLanguages = is_array($scholarship->languages)
-            ? $scholarship->languages
-            : json_decode($scholarship->languages, true) ?? [];
-
-        if(!$userLanguages || !$requiredLanguages){
+        if (!$countries) {
             return 0;
         }
 
-        $userLanguages = array_map('strtolower', $userLanguages);
-        $requiredLanguages = array_map('strtolower', $requiredLanguages);
+        //array_map('strtolower') retourne tout en minuscule pour la comparaison
 
-        //array_map('strtolower) retourne tt en miniscule pour la comparaison
+        $countries = array_map(fn($country) => strtolower(trim($country)), $countries);
 
-        $matches = count(array_intersect($userLanguages, $requiredLanguages));
-        //array_intersect retourne l'intersetion des valeurs communes aux deux tableaux
+        $scholarshipCountry = strtolower(trim($scholarship->country));
 
-        if($matches === 0){
-            return 0;
-        }
-
-        return (int) round(($matches / count($requiredLanguages)) * self::WEIGHTS['languages']);
-    }
-
-    private function scoreAverage(User $user, Scholarship $scholarship): int
-    {
-        if(!$user->average){
-            return 0;
-        }
-        
-        if(!$scholarship->min_average){
-            return self::WEIGHTS['average'];
-        }
-
-        if($user->average >= $scholarship->min_average){
-            return self::WEIGHTS['average'];
-        }
-
-        if($user->average >= ($scholarship->min_average - 1)){
-            return (int) (self::WEIGHTS['average'] / 2);
-        }
-        
-        return 0;
-    }
-
-    private function scoreEnglish(User $user, Scholarship $scholarship): int
-    {
-        if(!$user->english_level || !$scholarship->required_english_level){
-            return 0;
-        }
-
-        $levels = [
-            'A1' => 1,
-            'A2' => 2,
-            'B1' => 3,
-            'B2' => 4,
-            'C1' => 5,
-            'C2' => 6,
-        ];
-
-        $userLevel = strtoupper($user->english_level);
-        $requiredLevel = strtoupper($scholarship->required_english_level);
-
-        if(!isset($levels[$userLevel]) || !isset($levels[$requiredLevel])){
-            return 0;
-        }
-
-        // Full score
-        if($levels[$userLevel] >= $levels[$requiredLevel]) {
-            return self::WEIGHTS['english'];
-        }
-
-        //Partial
-        if($levels[$userLevel] === $levels[$requiredLevel] - 1){
-            return (int) (self::WEIGHTS['english'] / 2);
+        if (in_array($scholarshipCountry, $countries)) {
+            return self::WEIGHTS['country'];
         }
 
         return 0;

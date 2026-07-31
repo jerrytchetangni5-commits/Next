@@ -1,12 +1,6 @@
 #!/bin/bash
 set -e
 
-echo "Attente du fichier scholarships.json..."
-while [ ! -f /shared-data/scholarships.json ]; do
-    sleep 2
-done
-echo "Fichier trouvé, poursuite du démarrage."
-
 php artisan config:clear
 php artisan config:cache
 php artisan route:cache

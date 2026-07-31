@@ -1,16 +1,9 @@
 services:
-  scraper:
-    build:
-      context: ./scraper
-    volumes:
-      - shared-data:/app/storage
-
   backend:
     build:
       context: .
       dockerfile: Dockerfile
     depends_on:
-      - scraper
       - db
     ports:
       - "10000:10000"
@@ -32,7 +25,7 @@ services:
       ADMIN_COUNTRY: ${ADMIN_COUNTRY}
       ADMIN_ROLE: admin
     volumes:
-      - shared-data:/shared-data
+      - ./scraper/storage/scholarships.json:/shared-data/scholarships.json:ro
 
   db:
     image: postgres:16-alpine
@@ -46,5 +39,4 @@ services:
       - "5432:5432"
 
 volumes:
-  shared-data:
   db-data:

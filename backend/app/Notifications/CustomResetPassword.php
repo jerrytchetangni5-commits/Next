@@ -34,7 +34,8 @@ class CustomResetPassword extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $url = 'https://next-hj.vercel.app/auth/reset-password?token=' . $this->token . '&email=' . urlencode($notifiable->email);
+        $frontendUrl = env('FRONTEND_URL', 'https://next.qcdigitalhub.com');
+        $url = $frontendUrl . '/auth/reset-password?token=' . $this->token . '&email=' . urlencode($notifiable->email);
 
         return (new MailMessage)
             ->subject('Reset your password - Next')

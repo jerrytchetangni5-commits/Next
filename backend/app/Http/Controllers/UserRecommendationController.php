@@ -17,48 +17,74 @@ class UserRecommendationController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $query = Scholarship::query(); //Permet de construire la requete progressivement avec des conditions dynamique
-        if($user->study_domain){
-            $query->where('domain', 'LIKE', '%' . $user->study_domain . '%'); 
+
+        //verifie quels critères du profil sont renseignés
+        $hasDomain = !empty($user->study_domain);
+        $hasLevel = !empty($user->study_level);
+        $hasCountries = !empty($user->destination_countries) && is_array($user->destination_countries) && count($user->destination_countries) > 0;
+
+        //verifie si le profile est suffissament complet
+        if (!$hasDomain && !$hasLevel && !$hasCountries) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Veillez compléter votre profil pour obtenir des recommandations.',
+                'data' => [],
+                'count' => 0
+            ]);
         }
-        if($user->destination_countries && is_array($user->destination_countries)){ //evite une erreur si le champ est vide ou mal formé
-            $query->whereIn('country', $user->destination_countries); 
-        } //whereIn filtre les bourses dont le pays est dans la liste 
+
+        $query = Scholarship::query(); //Permet de construire la requete progressivement avec des conditions dynamique
+
+        if ($hasDomain) {
+            $query->where('domain', 'LIKE', '%' . $user->study_domain . '%');
+        }
+
+        if ($hasLevel) {
+            $query->where('level', 'LIKE', '%' . $user->study_level . '%');
+        }
+
+        if ($hasCountries) { //evite une erreur si le champ est vide ou mal formé
+            $query->whereIn('country', $user->destination_countries);
+        } //whereIn filtre les bourses dont le pays est dans la liste
 
         $query->where('deadline', '>=', now()); //bourse nn expiré
 
-        $query->whereNotIn('id', function($j)use($user){
+        $query->whereNotIn('id', function ($j) use ($user) {
             $j->select('scholarship_id')
-            ->from('favorites')
-            ->where('user_id', $user->id);   //exclure les bourses favorites de l'utilisateur
+                ->from('favorites')
+                ->where('user_id', $user->id);   //exclure les bourses favorites de l'utilisateur
         });
 
         // SCORE DE COMPATIBILITE
 
         $recommendations = $query->get() //get() exécute la requete et retourne une collection de bourses
-            ->map(function($scholarship)use($user){ // map() transforme chaque bourse en tableau avec les données formatées
+            ->map(function ($scholarship) use ($user) { // map() transforme chaque bourse en tableau avec les données formatées
+
                 $score = $this->scoreService->calculateScore($user, $scholarship); //On fait un appel au servise pour calculer le score
-                return[
-                    'id' => $scholarship->id,                    
+
+                return [
+                    'id' => $scholarship->id,
                     'title' => $scholarship->title,
                     'domain' => $scholarship->domain,
+                    'level' => $scholarship->level,
                     'country' => $scholarship->country,
                     'university' => $scholarship->university,
                     'deadline' => $scholarship->deadline,
                     'image' => $scholarship->image,
-                    'compatibility_score' => $score            
+                    'compatibility_score' => $score
                 ];
             })
-            
+
             ->sortByDesc('compatibility_score') // trie par order décroissant
-            ->take(10) //limite à 10 results
+            ->take(20) //limite à 20 results
             ->values(); //réindex le tableau
 
-        if($recommendations->isEmpty()){
+        if ($recommendations->isEmpty()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Completez votre profil pour obtenir de meilleur recommendation',
-                'data' => []
+                'message' => 'Aucune recommandation ne correspond à votre profil pour le moment.',
+                'data' => [],
+                'count' => 0
             ]);
         }
 
