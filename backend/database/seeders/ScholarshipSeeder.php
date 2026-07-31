@@ -17,7 +17,7 @@ class ScholarshipSeeder extends Seeder
     public function run(): void
     {
         // 1. Trouver le fichier JSON (chemin configurable via .env)
-        $path = env('SCHOLARSHIPS_JSON_PATH') ?: '/shared-data/scholarships.json';
+        $path = env('SCHOLARSHIPS_JSON_PATH') ?: base_path('../scraper/storage/scholarships.json');
 
         if (!File::exists($path)) {
             $this->command->error("Fichier introuvable : {$path}");
