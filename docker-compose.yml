@@ -1,6 +1,6 @@
 services:
   backend:
-    image: ghcr.io/<owner>/<repo>/next-api:latest
+    image: ghcr.io/jerrytchetangni5-commits/next/next-api:latest
     container_name: next-backend
     restart: unless-stopped
     ports:
