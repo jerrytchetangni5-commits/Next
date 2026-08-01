@@ -212,6 +212,15 @@ class CvController extends Controller
     private function generatePdf(string $html): string
     {
         return Browsershot::html($html)
+            ->setChromePath('/usr/bin/chromium-browser')
+            ->noSandbox()
+            ->setOption('args', [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-gpu',
+                '--single-process',
+            ])
             ->format('A4')
             ->showBackground()
             ->fitToPaper()
