@@ -8,7 +8,7 @@ RUN apk add --no-cache \
     libzip-dev \
     oniguruma-dev \
     nginx \
-    supervisor \ 
+    supervisor \
     postgresql-client
 
 RUN docker-php-ext-install pdo pdo_pgsql zip mbstring
