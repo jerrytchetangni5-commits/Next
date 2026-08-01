@@ -100,6 +100,8 @@ class CvController extends Controller
             'data' => 'required|array'
         ]);
 
+        $template = CvTemplate::findOrFail($validated['template_id']);
+
         if(auth()->check()){
             $cv = Cv::create([
                 'user_id' => auth()->id(),
@@ -108,14 +110,21 @@ class CvController extends Controller
                 'data' => $validated['data'],
                 'last_downloaded_at' => now()
             ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Cv crée et sauvegarder avec succès',
+                'data' => $cv
+            ], 201);
         }    
         
         return response()->json([
-            'success' => true,
-            'message' => 'Cv crée et sauvegarder avec succès',
-            'data' => $cv
-        ], 201);
+            'success' => false,
+            'message' => 'Vous devez etre connecté pour sauvegarder un CV'
+        ], 401);
+        
     }
+
 
     public function update(Request $request, $id)
     {

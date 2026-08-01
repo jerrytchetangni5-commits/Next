@@ -22,7 +22,7 @@ return new class extends Migration
             $table->text('benefits')->nullable(); //nullable = peut etre vide
             $table->text('requirements')->nullable();
             $table->string('image')->nullable();
-            $table->string('link');
+            $table->string('link')->unique();
             $table->timestamps();
         });
     }
