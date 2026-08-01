@@ -219,7 +219,6 @@ class CvController extends Controller
                 '--disable-setuid-sandbox',
                 '--disable-dev-shm-usage',
                 '--disable-gpu',
-                '--single-process',
             ])
             ->format('A4')
             ->showBackground()
