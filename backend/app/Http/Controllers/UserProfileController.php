@@ -47,9 +47,7 @@ class UserProfileController extends Controller
             'gender' => 'nullable|string|in:Homme,Femme',
             'study_level' => 'nullable|string',
             'study_domain' => 'nullable|string',
-            'average' => 'nullable|numeric|min:0',
-            'languages' => 'nullable|array',
-            'skills' => 'nullable|array'        
+            'destination_countries' => 'nullable|array'    
         ]);
 
         $user->update($validated);
@@ -71,9 +69,7 @@ class UserProfileController extends Controller
             'gender',
             'study_level',
             'study_domain',
-            'average',
-            'languages',
-            'skills'
+            'destination_countries'
         ];
 
         $filled = 0;
