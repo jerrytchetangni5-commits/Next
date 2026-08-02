@@ -21,7 +21,7 @@ class UserRecommendationController extends Controller
         //verifie quels critères du profil sont renseignés
         $hasDomain = !empty($user->study_domain);
         $hasLevel = !empty($user->study_level);
-        $hasCountries = !empty($user->destination_countries) && is_array($user->destination_countries) && count($user->destination_countries) > 0;
+        $hasCountries = !empty($user->destination_countries);
 
         //verifie si le profile est suffissament complet
         if (!$hasDomain && !$hasLevel && !$hasCountries) {
@@ -44,8 +44,8 @@ class UserRecommendationController extends Controller
         }
 
         if ($hasCountries) { //evite une erreur si le champ est vide ou mal formé
-            $query->whereIn('country', $user->destination_countries);
-        } //whereIn filtre les bourses dont le pays est dans la liste
+            $query->where('country', 'LIKE', '%' . $user->destination_countries . '%');
+        } //whereIn filtre les bourses dont le pays est dans la liste(J'ai modifier ici but i don't want to remove this comment)
 
         $query->where('deadline', '>=', now()); //bourse nn expiré
 

@@ -27,7 +27,7 @@ use App\Notifications\CustomResetPassword;
     'gender',
     'study_level',
     'study_domain',
-    'destinations_countries'
+    'destination_countries'
 
 ])]
 #[Hidden(['password', 'remember_token'])]
@@ -47,7 +47,6 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'birth_date' => 'date',
-            'destination_countries' => 'array'
 
         ];
     }
