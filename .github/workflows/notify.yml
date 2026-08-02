@@ -2,7 +2,7 @@ name: Notify deadlines
 
 on:
   schedule:
-    - cron: '10 14 * * *' # Tous les jours à 8h00
+    - cron: '10 00 * * *' # Tous les jours à 8h00
   workflow_dispatch: # Permet de le lancer manuellement
 
 jobs:
