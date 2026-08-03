@@ -11,5 +11,5 @@ jobs:
     steps:
       - name: Trigger notifications
         run: |
-          curl -f -X POST https://next-api.qcdigitalhub.com/api/cron/notify-deadlines \
+          curl -f -X POST https://next-api.mameribj.com/api/cron/notify-deadlines \
             -H "X-Cron-Secret: ${{ secrets.CRON_SECRET }}"

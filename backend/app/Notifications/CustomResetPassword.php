@@ -34,7 +34,7 @@ class CustomResetPassword extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $frontendUrl = env('FRONTEND_URL', 'https://next.qcdigitalhub.com');
+        $frontendUrl = env('FRONTEND_URL', 'https://next.mameribj.com');
         $url = $frontendUrl . '/auth/reset-password?token=' . $this->token . '&email=' . urlencode($notifiable->email);
 
         return (new MailMessage)
