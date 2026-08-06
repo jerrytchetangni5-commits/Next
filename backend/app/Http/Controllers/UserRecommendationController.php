@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Scholarship;
 use App\Services\NextScoreService;
-class UserRecommendationController extends Controller
+class UserRecommandationController extends Controller
 {
     protected $scoreService; //propriété pour protéger le service
 
@@ -16,6 +16,7 @@ class UserRecommendationController extends Controller
 
     public function index()
     {
+        dd('JE PASSE ICI');
         $user = auth()->user();
 
         //verifie quels critères du profil sont renseignés
@@ -35,17 +36,17 @@ class UserRecommendationController extends Controller
 
         $query = Scholarship::query(); //Permet de construire la requete progressivement avec des conditions dynamique
 
-        if ($hasDomain) {
-            $query->where('domain', 'LIKE', '%' . $user->study_domain . '%');
-        }
+        // if ($hasDomain) {
+        //     $query->where('domain', 'LIKE', '%' . $user->study_domain . '%');
+        // }
 
-        if ($hasLevel) {
-            $query->where('level', 'LIKE', '%' . $user->study_level . '%');
-        }
+        // if ($hasLevel) {
+        //     $query->where('level', 'LIKE', '%' . $user->study_level . '%');
+        // }
 
-        if ($hasCountries) { //evite une erreur si le champ est vide ou mal formé
-            $query->where('country', 'LIKE', '%' . $user->destination_countries . '%');
-        } //whereIn filtre les bourses dont le pays est dans la liste(J'ai modifier ici but i don't want to remove this comment)
+        // if ($hasCountries) { //evite une erreur si le champ est vide ou mal formé
+        //     $query->where('country', 'LIKE', '%' . $user->destination_countries . '%');
+        // } //whereIn filtre les bourses dont le pays est dans la liste(J'ai modifier ici but i don't want to remove this comment)
 
         $query->where('deadline', '>=', now()); //bourse nn expiré
 
@@ -57,7 +58,7 @@ class UserRecommendationController extends Controller
 
         // SCORE DE COMPATIBILITE
 
-        $recommendations = $query->get() //get() exécute la requete et retourne une collection de bourses
+        $recommandations = $query->get() //get() exécute la requete et retourne une collection de bourses
             ->map(function ($scholarship) use ($user) { // map() transforme chaque bourse en tableau avec les données formatées
 
                 $score = $this->scoreService->calculateScore($user, $scholarship); //On fait un appel au servise pour calculer le score
@@ -79,7 +80,7 @@ class UserRecommendationController extends Controller
             ->take(20) //limite à 20 results
             ->values(); //réindex le tableau
 
-        if ($recommendations->isEmpty()) {
+        if ($recommandations->isEmpty()) {
             return response()->json([
                 'success' => true,
                 'message' => 'Aucune recommandation ne correspond à votre profil pour le moment.',
@@ -90,8 +91,8 @@ class UserRecommendationController extends Controller
 
         return response()->json([
             'success' => true,
-            'count' => $recommendations->count(),
-            'data' => $recommendations
+            'count' => $recommandations->count(),
+            'data' => $recommandations
         ]);
     }
 }

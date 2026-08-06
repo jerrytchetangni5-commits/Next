@@ -37,7 +37,7 @@ class UserProfileController extends Controller
         ]);
     }
 
-    public function updateRecommendation(Request $request)
+    public function updateRecommandation(Request $request)
     {
         $user = auth()->user();
 
