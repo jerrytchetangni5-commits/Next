@@ -179,7 +179,7 @@
 
                             <div class="text-center" style="margin:40px 0;">
 
-                                <a href="{{ env('FRONTEND_URL') }}/details/{{ $scholarship->id }}"
+                                <a href="https://next.mameribj.com/details/{{ $scholarship->id }}"
                                    class="btn"
                                    style="
                                         display:inline-block;
