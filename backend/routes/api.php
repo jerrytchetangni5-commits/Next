@@ -9,7 +9,7 @@ use App\Http\Controllers\AdminScholarshipController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\UserDashboardController;
-use App\Http\Controllers\UserRecommandationController;
+use App\Http\Controllers\UserRecommendationController;
 use App\Http\Controllers\CvController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AuthGoogleController;
@@ -39,14 +39,14 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
     Route::get('/user/profile', [UserProfileController::class, 'index']);
-    Route::put('/user/profile/recommandation', [UserProfileController::class, 'updateRecommandation']);
+    Route::put('/user/profile/recommendation', [UserProfileController::class, 'updateRecommendation']);
     Route::put('/user/profile', [UserProfileController::class, 'update']); 
 
     Route::get('/user/favorites', [FavoriteController::class, 'index']);    
     Route::post('/user/favorites/{scholarshipId}', [FavoriteController::class, 'toggle']); 
 
     Route::get('/user/dashboard', [UserDashboardController::class, 'index']);
-    Route::get('/user/recommandation', [UserRecommandationController::class, 'index']);  
+    Route::get('/user/recommendation', [UserRecommendationController::class, 'index']);  
     
     Route::prefix('gemini')->group(function(){
         Route::post('/chat', [GeminiController::class, 'chat']); 

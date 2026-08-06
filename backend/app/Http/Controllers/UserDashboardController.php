@@ -17,7 +17,7 @@ class UserDashboardController extends Controller
 
         $favoriteCount = Favorite::where('user_id', $user->id)->count();
 
-        $recommandation = 0;
+        $recommendation = 0;
 
         return response()->json([
             'success' => true,
@@ -25,7 +25,7 @@ class UserDashboardController extends Controller
                 'newScholarships' => $newScholarships,
                 'profile_completion' => $completion,
                 'favorite' => $favoriteCount,
-                'recommandation' => $recommandation
+                'recommendation' => $recommendation
             ]
         ]);
     }
