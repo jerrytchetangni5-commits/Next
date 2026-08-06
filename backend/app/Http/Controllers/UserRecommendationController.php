@@ -16,7 +16,6 @@ class UserRecommendationController extends Controller
 
     public function index()
     {
-        dd('JE PASSE ICI');
         $user = auth()->user();
 
         //verifie quels critères du profil sont renseignés
