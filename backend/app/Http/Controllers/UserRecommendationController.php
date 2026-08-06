@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Scholarship;
 use App\Services\NextScoreService;
-class UserRecommandationController extends Controller
+class UserRecommendationController extends Controller
 {
     protected $scoreService; //propriété pour protéger le service
 
@@ -16,7 +16,6 @@ class UserRecommandationController extends Controller
 
     public function index()
     {
-        dd('JE PASSE ICI');
         $user = auth()->user();
 
         //verifie quels critères du profil sont renseignés
@@ -28,7 +27,7 @@ class UserRecommandationController extends Controller
         if (!$hasDomain && !$hasLevel && !$hasCountries) {
             return response()->json([
                 'success' => true,
-                'message' => 'Veillez compléter votre profil pour obtenir des recommandations.',
+                'message' => 'Veillez compléter votre profil pour obtenir des recommendations.',
                 'data' => [],
                 'count' => 0
             ]);
@@ -58,7 +57,7 @@ class UserRecommandationController extends Controller
 
         // SCORE DE COMPATIBILITE
 
-        $recommandations = $query->get() //get() exécute la requete et retourne une collection de bourses
+        $recommendations = $query->get() //get() exécute la requete et retourne une collection de bourses
             ->map(function ($scholarship) use ($user) { // map() transforme chaque bourse en tableau avec les données formatées
 
                 $score = $this->scoreService->calculateScore($user, $scholarship); //On fait un appel au servise pour calculer le score
@@ -80,10 +79,10 @@ class UserRecommandationController extends Controller
             ->take(20) //limite à 20 results
             ->values(); //réindex le tableau
 
-        if ($recommandations->isEmpty()) {
+        if ($recommendations->isEmpty()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Aucune recommandation ne correspond à votre profil pour le moment.',
+                'message' => 'Aucune recommendation ne correspond à votre profil pour le moment.',
                 'data' => [],
                 'count' => 0
             ]);
@@ -91,8 +90,8 @@ class UserRecommandationController extends Controller
 
         return response()->json([
             'success' => true,
-            'count' => $recommandations->count(),
-            'data' => $recommandations
+            'count' => $recommendations->count(),
+            'data' => $recommendations
         ]);
     }
 }
