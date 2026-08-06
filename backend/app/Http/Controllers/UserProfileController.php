@@ -37,17 +37,17 @@ class UserProfileController extends Controller
         ]);
     }
 
-    public function updateRecommendation(Request $request)
+    public function updateRecommandation(Request $request)
     {
         $user = auth()->user();
 
         $validated = $request->validate([
-            'nationality' => 'nullable|string|max:100',
+            'nationality' => 'nullable|string|max:50',
             'birth_date' => 'nullable|date',
             'gender' => 'nullable|string|in:Homme,Femme',
             'study_level' => 'nullable|string',
             'study_domain' => 'nullable|string',
-            'destination_countries' => 'nullable|array'    
+            'destination_countries' => 'nullable|string|max:50'    
         ]);
 
         $user->update($validated);
@@ -73,17 +73,9 @@ class UserProfileController extends Controller
         ];
 
         $filled = 0;
-        foreach($fields as $field){
-            $value = $user->$field;
-            if(!empty($value)){
-                if(is_array($value)){
-                    if(count($value) > 0){
-                        $filled++;
-                    }
-                }
-                elseif(!is_array($value)){
-                    $filled++;
-                }
+        foreach ($fields as $field) {
+            if (!empty($user->$field)) {
+                $filled++;
             }
         }
         return(int) round(($filled / count($fields)) * 100);

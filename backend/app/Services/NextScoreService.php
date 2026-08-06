@@ -93,32 +93,25 @@ class NextScoreService
     }
 
     private function scoreCountry(User $user, Scholarship $scholarship): int
-    {
-        if (
-            (!$user->destination_countries || !$scholarship->country) ||
-            (!$user->destination_countries && !$scholarship->country)
-        ) {
-            return 0;
-        }
-
-        $countries = is_array($user->destination_countries)
-            ? $user->destination_countries
-            : json_decode($user->destination_countries, true);
-
-        if (!$countries) {
-            return 0;
-        }
-
-        //array_map('strtolower') retourne tout en minuscule pour la comparaison
-
-        $countries = array_map(fn($country) => strtolower(trim($country)), $countries);
-
-        $scholarshipCountry = strtolower(trim($scholarship->country));
-
-        if (in_array($scholarshipCountry, $countries)) {
-            return self::WEIGHTS['country'];
-        }
-
+{
+    if (!$user->destination_countries || !$scholarship->country) {
         return 0;
     }
+
+    $userCountry = strtolower(trim($user->destination_countries));
+    $scholarshipCountry = strtolower(trim($scholarship->country));
+
+    if ($userCountry === $scholarshipCountry) {
+        return self::WEIGHTS['country'];
+    }
+
+    if (
+        str_contains($userCountry, $scholarshipCountry) ||
+        str_contains($scholarshipCountry, $userCountry)
+    ) {
+        return (int) (self::WEIGHTS['country'] / 2);
+    }
+
+    return 0;
+}
 }

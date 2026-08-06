@@ -1,110 +1,218 @@
-@php
-    $plural = $daysLeft > 1 ? 's' : '';
-@endphp
 <!DOCTYPE html>
-<html lang="fr" xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
-<meta name="color-scheme" content="light">
-<meta name="supported-color-schemes" content="light">
-<meta name="x-apple-disable-message-reformatting">
-<title>Rappel de date limite</title>
-<!--[if mso]>
-<noscript>
-<xml>
-<o:OfficeDocumentSettings>
-<o:PixelsPerInch>96</o:PixelsPerInch>
-</o:OfficeDocumentSettings>
-</xml>
-</noscript>
-<![endif]-->
-<style>
-    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
-    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
-    body { margin: 0; padding: 0; width: 100% !important; background-color: #F5F1F0; }
-
-    @media only screen and (max-width: 620px) {
-        .stack-padding { padding-left: 24px !important; padding-right: 24px !important; }
-        .header-padding { padding: 40px 24px 32px !important; }
-        .medallion, .medallion td { width: 80px !important; height: 80px !important; }
-        .medallion-number { font-size: 32px !important; }
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rappel de candidature - Next</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .container {
+            background: #f5f5f5;
+            padding: 40px 0;
+        }
+        .card {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .header {
+            background: #6b0f2b;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 52px;
+            font-weight: bold;
+            color: #ffffff;
+            letter-spacing: 2px;
+        }
+        .header p {
+            margin: 10px 0 0;
+            color: #f2d8df;
+            font-size: 18px;
+        }
+        .content {
+            padding: 45px;
+        }
+        .emoji {
+            font-size: 28px;
+            text-align: center;
+            margin: 0;
+        }
+        .divider {
+            width: 80px;
+            border: none;
+            border-top: 2px solid #6b0f2b;
+            margin: 15px auto 35px;
+        }
+        .text {
+            font-size: 19px;
+            color: #333;
+            line-height: 1.8;
+            margin-top: 0;
+        }
+        .info-box {
+            background: #faf7f8;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 35px 0;
+        }
+        .info-box p {
+            margin: 12px 0;
+            font-size: 17px;
+        }
+        .days-left {
+            font-size: 22px;
+            font-weight: bold;
+            color: #6b0f2b;
+            text-align: center;
+        }
+        .btn {
+            display: inline-block;
+            background: #6b0f2b;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 16px 40px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .footer {
+            padding: 30px;
+            background: #fafafa;
+            text-align: center;
+        }
+        .footer hr {
+            border: none;
+            border-top: 1px solid #dddddd;
+        }
+        .footer p {
+            font-size: 14px;
+            color: #777;
+            line-height: 1.8;
+            margin-top: 25px;
+        }
+        .footer .copy {
+            font-size: 13px;
+            color: #999;
+            margin-top: 25px;
+        }
+        .text-center {
+            text-align: center;
+        }
+    </style>
 </head>
-<body style="margin:0; padding:0; background-color:#F5F1F0;">
+<body>
 
-    <div style="display:none; max-height:0; overflow:hidden; mso-hide:all; font-size:1px; line-height:1px; color:#F5F1F0;">
-        Plus que {{ $daysLeft }} jour{{ $plural }} pour candidater à {{ $scholarship->title }}.
-        &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;
-    </div>
-
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#F5F1F0" style="background-color:#F5F1F0;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" class="container">
         <tr>
-            <td align="center" style="padding:48px 16px;">
+            <td align="center">
 
-                <table role="presentation" width="600" cellpadding="0" cellspacing="0" bgcolor="#ffffff" style="width:100%; max-width:600px; background-color:#ffffff; border-radius:14px; overflow:hidden; box-shadow:0 12px 32px rgba(74,15,24,0.14); font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+                <table role="presentation" width="600" cellpadding="0" cellspacing="0" class="card">
 
+                    <!-- HEADER -->
                     <tr>
-                        <td align="center" class="header-padding" bgcolor="#4A0F18" style="background-color:#4A0F18; padding:44px 40px 40px;">
+                        <td class="header">
+                            <h1>NEXT</h1>
+                            <p>Trouvez la bourse qui vous correspond</p>
+                        </td>
+                    </tr>
 
-                            <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('images/next.png'))) }}" alt="Next" style="display:block; max-width:120px; margin:0 auto 20px; height:auto;">
+                    <!-- CONTENU -->
+                    <tr>
+                        <td class="content">
 
-                            <p style="margin:0 0 24px; color:rgba(255,255,255,0.72); font-size:12px; font-weight:600; letter-spacing:2px; text-transform:uppercase;">
-                                Rappel de date limite
+                            <p class="emoji">🔔</p>
+
+                            <hr class="divider">
+
+                            <p class="text">
+                                Ceci est un rappel concernant une bourse que vous avez enregistrée dans vos favoris.
                             </p>
 
-                            <table role="presentation" cellpadding="0" cellspacing="0" class="medallion" style="margin:0 auto;">
-                                <tr>
-                                    <td width="96" height="96" align="center" valign="middle" bgcolor="#ffffff" style="width:96px; height:96px; border-radius:50%; background-color:#ffffff; border:3px solid #926F74;">
-                                        <span class="medallion-number" style="font-family: Georgia, 'Times New Roman', serif; font-size:40px; font-weight:700; color:#4A0F18; line-height:1;">{{ $daysLeft }}</span>
-                                    </td>
-                                </tr>
-                            </table>
-
-                            <p style="margin:20px 0 0; color:#ffffff; font-size:14px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase;">
-                                Jour{{ $plural }} restant{{ $plural }}
+                            <p class="text">
+                                La date limite de candidature approche. Retrouvez ci-dessous les informations de la bourse.
                             </p>
+
+                            <div class="info-box">
+
+                                <p>
+                                    <strong>Bourse :</strong> {{ $scholarship->title }}
+                                </p>
+
+                                @if($scholarship->university)
+                                <p>
+                                    <strong>Université :</strong> {{ $scholarship->university }}
+                                </p>
+                                @endif
+
+                                @if($scholarship->country)
+                                <p>
+                                    <strong>Pays :</strong> {{ $scholarship->country }}
+                                </p>
+                                @endif
+
+                                @if($scholarship->deadline)
+                                <p>
+                                    <strong>Date limite :</strong>
+                                    {{ \Carbon\Carbon::parse($scholarship->deadline)->format('d/m/Y') }}
+                                </p>
+                                @endif
+
+                            </div>
+
+                            <p class="days-left">
+                                Plus que {{ $daysLeft }} {{ $daysLeft > 1 ? 'jours' : 'jour' }}
+                            </p>
+
+                            <p class="text" style="text-align:center;">
+                                Ne manquez pas cette opportunité. Finalisez votre candidature avant la date limite.
+                            </p>
+
+                            <div class="text-center" style="margin:40px 0;">
+
+                                <a href="{{ env('FRONTEND_URL') }}/details/{{ $scholarship->id }}"
+                                   class="btn"
+                                   style="
+                                        display:inline-block;
+                                        background:#6b0f2b;
+                                        color:#ffffff;
+                                        text-decoration:none;
+                                        padding:16px 40px;
+                                        border-radius:8px;
+                                        font-size:18px;
+                                        font-weight:bold;">
+                                    Voir la bourse
+                                </a>
+
+                            </div>
 
                         </td>
                     </tr>
 
+                    <!-- FOOTER -->
                     <tr>
-                        <td class="stack-padding" style="padding:40px; color:#2B2B2B; font-size:16px; line-height:1.6;">
+                        <td class="footer">
 
-                            <p style="margin:0 0 16px;">Bonjour,</p>
+                            <hr>
 
-                            <p style="margin:0 0 16px;">
-                                Vous aviez sauvegardé la bourse <strong style="font-family: Georgia, 'Times New Roman', serif; color:#4A0F18;">{{ $scholarship->title }}</strong> dans vos favoris.
+                            <p>
+                                Cet email a été envoyé automatiquement par <strong>NEXT</strong>.<br>
+                                Merci de ne pas y répondre.
                             </p>
 
-                            <p style="margin:0 0 16px;">
-                                La date limite de candidature est dans <strong style="font-family: Georgia, 'Times New Roman', serif; color:#4A0F18;">{{ $daysLeft }} jour{{ $plural }}</strong>.
+                            <p class="copy">
+                                &copy; {{ date('Y') }} NEXT. Tous droits réservés.
                             </p>
 
-                            <p style="margin:0 0 32px;">
-                                Ne manquez pas cette opportunité !
-                            </p>
-
-                            <table role="presentation" cellpadding="0" cellspacing="0">
-                                <tr>
-                                    <td align="center" bgcolor="#4A0F18" style="border-radius:8px;">
-                                        <a href="{{ config('app.frontend_url', 'https://next-hj.vercel.app') }}/scholarships/{{ $scholarship->id }}" target="_blank" style="display:inline-block; padding:14px 36px; font-size:16px; font-weight:600; color:#ffffff; text-decoration:none; border-radius:8px;">
-                                            Voir la bourse
-                                        </a>
-                                    </td>
-                                </tr>
-                            </table>
-
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td class="stack-padding" style="padding:24px 40px 36px; border-top:1px solid #EFEFEF;">
-                            <p style="margin:0 0 6px; color:#707070; font-size:12px;">Cet email a été envoyé automatiquement par Next.</p>
-                            <p style="margin:0; color:#707070; font-size:12px;">&copy; {{ date('Y') }} Next. Tous droits réservés.</p>
                         </td>
                     </tr>
 
